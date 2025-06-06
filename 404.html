@@ -1,25 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Deteksi Lokasi</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 - Aduh Keliru!</title>
+  <style>
+    body {
+      font-size: 11px;
+      color: #808080;
+      line-height: 1.4;
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+      background-color: #000000;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+    img {
+      max-width: 100px;
+      height: auto;
+    }
+    .url-salah {
+      color: red;
+      font-weight: bold;
+      word-break: break-word;
+    }
+    a {
+      text-decoration: none;
+      color: #cc2222;
+    }
+    a:hover {
+      color: #ff0000;
+    }
+    @media screen and (max-width: 480px) {
+      body { font-size: 10px; }
+      img { max-width: 80px; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Info Pengunjung</h1>
-  <div id="info">Loading...</div>
+  <div class="container">
+    <p><font color="red"><big><b>ADUH KELIRU <i>!!!</i></b></big></font></p>
+    <img src="https://vnetnetwork.my.id/assets/img/keliru.jpg" alt="keliru"><br><br>
+
+    Sebab ndak pernah ada itu yang namanya:<br>
+    <span class="url-salah" id="urlSalah"></span><br><br>
+
+    <strong>[Your Public IP is already recorded in the logs]</strong><br>
+    IP: <strong id="ipPengunjung">Loading...</strong><br>
+    Negara: <strong id="negara">Loading...</strong><br>
+    ISP: <strong id="isp">Loading...</strong><br><br>
+
+    <a href="/">[ Klik di sini untuk kembali ke Jalan yang Benar ]</a><br><br>
+    <img src="https://vnetnetwork.my.id/assets/img/plungkernews.gif" alt="plungkernews" />
+  </div>
 
   <script>
-    fetch("https://ipinfo.io/json?token=YOUR_TOKEN")  // Dapatkan token gratis di ipinfo.io
+    // Tampilkan URL yang salah
+    document.getElementById('urlSalah').textContent = window.location.href;
+
+    // Ambil info IP, Negara, ISP pakai ipwho.is (gratis tanpa token)
+    fetch('https://ipwho.is/')
       .then(res => res.json())
       .then(data => {
-        document.getElementById("info").innerHTML = `
-          IP: ${data.ip} <br>
-          ISP: ${data.org} <br>
-          Kota: ${data.city} <br>
-          Negara: ${data.country}
-        `;
+        document.getElementById('ipPengunjung').textContent = data.ip || 'Tidak diketahui';
+        document.getElementById('negara').textContent = data.country || 'Tidak diketahui';
+        document.getElementById('isp').textContent = (data.connection && data.connection.isp) ? data.connection.isp : 'Tidak diketahui';
       })
       .catch(() => {
-        document.getElementById("info").innerText = "Gagal mendapatkan info lokasi.";
+        document.getElementById('ipPengunjung').textContent = 'Gagal mengambil data';
+        document.getElementById('negara').textContent = 'Gagal mengambil data';
+        document.getElementById('isp').textContent = 'Gagal mengambil data';
       });
   </script>
 </body>
