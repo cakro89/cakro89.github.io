@@ -1,24 +1,26 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - Halaman Tidak Ditemukan</title>
-  <style>
-    body {
-      background-color: #0d1117;
-      color: #fff;
-      text-align: center;
-      padding: 100px;
-      font-family: Arial, sans-serif;
-    }
-    h1 { font-size: 4em; }
-    p { font-size: 1.2em; }
-  </style>
+  <title>Deteksi Lokasi</title>
 </head>
 <body>
-  <h1>404 😢</h1>
-  <p>Halaman yang kamu cari tidak ditemukan.</p>
-  <a href="/" style="color:#61dafb;">Kembali ke Beranda</a>
+  <h1>Info Pengunjung</h1>
+  <div id="info">Loading...</div>
+
+  <script>
+    fetch("https://ipinfo.io/json?token=YOUR_TOKEN")  // Dapatkan token gratis di ipinfo.io
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("info").innerHTML = `
+          IP: ${data.ip} <br>
+          ISP: ${data.org} <br>
+          Kota: ${data.city} <br>
+          Negara: ${data.country}
+        `;
+      })
+      .catch(() => {
+        document.getElementById("info").innerText = "Gagal mendapatkan info lokasi.";
+      });
+  </script>
 </body>
 </html>
