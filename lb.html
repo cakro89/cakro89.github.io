@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kandang Kambing - LB PCC Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Header Judul Utama di Atas */
+        .page-header {
+            text-align: left;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }
+
+        .page-title span {
+            color: #dc3545;
+        }
+
+        /* Breadcrumb/Sub-nav di bawah judul */
+        .breadcrumb-nav {
+            font-size: 11px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+
+        .topology-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 150px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Layout Utama Membagi Kiri (Input) dan Kanan (Terminal) */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 20px;
+            text-align: left;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .grid-inside {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-row-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Memadatkan baris inputan ether */
+        .wan-grid-row {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr 0.8fr;
+            gap: 6px;
+            align-items: center;
+            background: #fdfdfd;
+            padding: 2px 6px; /* Jarak atas bawah dipadatkan */
+            border: 1px solid #f1f3f5;
+            border-radius: 4px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 4px 8px; /* Lebih tipis agar jarak makin rapat */
+            font-size: 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            outline: none;
+            background-color: #fff;
+        }
+
+        /* Teks info panduan bandwidth */
+        .info-note {
+            font-size: 11px;
+            color: #198754;
+            font-weight: 600;
+            margin-top: 2px;
+            margin-bottom: -4px;
+        }
+
+        .wan-inputs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* Jarak antar baris ether dipersempit */
+            max-height: 195px;
+            overflow-y: auto;
+            padding-right: 3px;
+            border: 1px dashed #dee2e6;
+            padding: 6px;
+            border-radius: 4px;
+            background: #fefefe;
+        }
+
+        /* Tombol Aksi Sisi Kiri */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 2px;
+        }
+
+        .btn-tool {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .btn-generate { background-color: #6c757d; }
+        .btn-generate:hover { background-color: #5a6268; }
+        .btn-clear { background-color: #6c757d; }
+        .btn-clear:hover { background-color: #5a6268; }
+
+        /* Sisi Kanan Layout: Area Terminal Hasil Skrip */
+        .terminal-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-copy-small {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+        .btn-copy-small:hover { background-color: #5a6268; }
+
+        .terminal-box {
+            width: 100%;
+            height: 275px;
+            background-color: #e9ecef;
+            color: #333;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            overflow: auto;
+        }
+
+        .remove-container {
+            margin-top: 15px;
+        }
+
+        .remove-terminal {
+            width: 100%;
+            height: 70px;
+            background-color: #fff5f5;
+            color: #721c24;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 10px;
+            border: 1px dashed #f5c6cb;
+            padding: 6px;
+            border-radius: 4px;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        
+        <div class="page-header">
+            <h1 class="page-title">MIKROTIK <span>LOAD BALANCE PCC</span> (PER-CONNECTION CLASSIFIER) GENERATOR</h1>
+            <div class="breadcrumb-nav">🏠 Beranda » MikroTik Load Balance PCC (Per-Connection Classifier) Generator</div>
+        </div>
+
+        <div class="topology-container">
+            <img class="topology-img" src="img/pcc.png" alt="PCC Topology Diagram">
+        </div>
+
+        <div class="main-content">
+            
+            <div class="left-section" style="border-right: none; padding-right: 0;">
+                <div class="grid-inside">
+                    
+                    <div class="form-row-two">
+                        <div class="form-group">
+                            <label>Versi RouterOS</label>
+                            <select id="ros-version" class="form-control">
+                                <option value="ros6">RouterOS v6.x</option>
+                                <option value="ros7" selected>RouterOS v7.x</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Line WAN ISP</label>
+                            <select id="wan-count" class="form-control" onchange="renderWanInputsWithBw()">
+                                <option value="2">2 Line WAN</option>
+                                <option value="3">3 Line WAN</option>
+                                <option value="4">4 Line WAN</option>
+                                <option value="6">6 Line WAN</option>
+                                <option value="7">7 Line WAN</option>
+                                <option value="8">8 Line WAN</option>
+                                <option value="9">9 Line WAN</option>
+                                <option value="10">10 Line WAN</option>
+                                <option value="11">11 Line WAN</option>
+                                <option value="12">12 Line WAN</option>
+                                <option value="13">13 Line WAN</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row-two">
+                        <div class="form-group">
+                            <label>Local Target</label>
+                            <select id="local-target-type" class="form-control" onchange="handleTargetTypeChange()">
+                                <option value="address-list">IP Address List</option>
+                                <option value="in-interface">In. Interface</option>
+                                <option value="in-interface-list">In. Interface List</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label id="local-value-label">Nama Address List:</label>
+                            <input type="text" id="local-target-value" class="form-control" value="ip-local">
+                        </div>
+                    </div>
+
+                    <div class="info-note">
+                        *NB: Sesuaikan Mbps dengan bandwidth real ether masing-masing
+                    </div>
+
+                    <div class="wan-inputs-container" id="wan-inputs-box">
+                        </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-tool btn-generate" onclick="generatePccRatioLogic()">⚙️ Generate</button>
+                        <button class="btn-tool btn-clear" onclick="clearForm()">🗑️ Clear</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="right-section" style="padding-left: 0;">
+                
+                <div>
+                    <div class="terminal-label">
+                        <span>Copy-Paste ke Terminal Mikrotik!</span>
+                        <button class="btn-copy-small" onclick="copyToClipboard('main-script')">📄 Copy</button>
+                    </div>
+                    <textarea id="main-script" class="terminal-box" readonly placeholder="# Masukkan data di kiri lalu klik tombol 'Generate'..."></textarea>
+                </div>
+
+                <div class="remove-container">
+                    <div class="terminal-label" style="color: #d9534f;">
+                        <span># Script Untuk Menghapus Script Generator!</span>
+                        <button class="btn-copy-small" style="background-color: #d9534f;" onclick="copyToClipboard('remove-script')">📄 Copy</button>
+                    </div>
+                    <textarea id="remove-script" class="remove-terminal" readonly placeholder="# Skrip penghapus rule lama otomatis muncul disini..."></textarea>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="quote-box" id="random-quote">
+            "Kewajiban kita hanyalah bekerja. Kewajiban rezeki ialah mengejar kita, bukan kita yang mengejar rezeki." — <em>Anonim</em>
+        </div>
+
+        <div class="footer-nav">
+            <a href="index.html" class="btn-nav">🏠 Beranda</a>
+            <a href="index.html" class="btn-nav">🔄 Kembali</a>
+            <a href="#" class="btn-nav" onclick="location.reload()">⚙️ Update</a>
+            <a href="#" class="btn-nav">📅 Jadwal Sholat</a>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            renderWanInputsWithBw();
+            setRandomQuote();
+        };
+
+        function handleTargetTypeChange() {
+            const type = document.getElementById('local-target-type').value;
+            const label = document.getElementById('local-value-label');
+            const input = document.getElementById('local-target-value');
+
+            if (type === 'address-list') { label.innerText = "Nama Address List:"; input.value = "ip-local"; }
+            else if (type === 'in-interface') { label.innerText = "In. Interface LAN:"; input.value = "ether-lokal"; }
+            else if (type === 'in-interface-list') { label.innerText = "In. Interface List:"; input.value = "LAN-List"; }
+        }
+
+        function renderWanInputsWithBw() {
+            const count = parseInt(document.getElementById('wan-count').value);
+            const container = document.getElementById('wan-inputs-box');
+            container.innerHTML = '';
+
+            for(let i = 1; i <= count; i++) {
+                let defaultBw = (i === 1) ? 10 : 10; 
+                container.innerHTML += `
+                    <div class="wan-grid-row">
+                        <div class="form-group">
+                            <label>WAN Internet-${i}</label>
+                            <input type="text" id="wan-name-${i}" class="form-control" style="padding:4px; font-size:11px;" value="ether${i}">
+                        </div>
+                        <div class="form-group">
+                            <label>Gateway Internet-${i}</label>
+                            <input type="text" id="wan-gtw-${i}" class="form-control" style="padding:4px; font-size:11px;" value="192.168.${i}.1">
+                        </div>
+                        <div class="form-group">
+                            <label>Mbps</label>
+                            <input type="number" id="wan-bw-${i}" class="form-control" style="padding:4px; font-size:11px;" value="${defaultBw}">
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function findGCD(a, b) { return b ? findGCD(b, a % b) : a; }
+        function getArrayGCD(arr) {
+            let result = arr[0];
+            for (let i = 1; i < arr.length; i++) result = findGCD(result, arr[i]);
+            return result;
+        }
+
+        function generatePccRatioLogic() {
+            const ros = document.getElementById('ros-version').value;
+            const wanCount = parseInt(document.getElementById('wan-count').value);
+            const targetType = document.getElementById('local-target-type').value;
+            const targetVal = document.getElementById('local-target-value').value;
+            const commentTag = "LB PCC by MikTool";
+
+            let bws = []; let wans = [];
+            for (let i = 1; i <= wanCount; i++) {
+                let bwVal = parseInt(document.getElementById(`wan-bw-${i}`).value) || 10;
+                bws.push(bwVal);
+                wans.push({ id: i, name: document.getElementById(`wan-name-${i}`).value, gtw: document.getElementById(`wan-gtw-${i}`).value, bw: bwVal });
+            }
+
+            let divisor = getArrayGCD(bws);
+            let totalShares = 0;
+            wans.forEach(wan => {
+                wan.ratio = wan.bw / divisor;
+                totalShares += wan.ratio;
+            });
+
+            let removeScript = `##################################################\n/ip firewall nat remove [find comment="${commentTag}"]\n/ip route remove [find comment="${commentTag}"]\n/ip firewall mangle remove [find comment="${commentTag}"]\n`;
+            if (targetType === 'address-list') removeScript += `/ip firewall address-list remove [find comment="${commentTag}"]\n`;
+            if (ros === 'ros7') removeScript += `/routing table remove [find comment="${commentTag}"]\n`;
+            document.getElementById('remove-script').value = removeScript;
+
+            let mainScript = `##################################################\n# PCC RATIO SYSTEM (${ros.toUpperCase()}) - Denominator Bagian: ${totalShares}\n##################################################\n\n`;
+            
+            if (targetType === 'address-list') {
+                mainScript += `/ip firewall address-list\nadd address=192.168.0.0/16 list=${targetVal} comment="${commentTag}"\nadd address=172.16.0.0/12 list=${targetVal} comment="${commentTag}"\nadd address=10.0.0.0/8 list=${targetVal} comment="${commentTag}"\n\n`;
+            }
+
+            mainScript += `/ip firewall nat\n`;
+            wans.forEach(wan => { mainScript += `add chain=srcnat out-interface="${wan.name}" action=masquerade comment="${commentTag}"\n`; });
+
+            mainScript += `\n/ip firewall mangle\n`;
+            if (targetType === 'address-list') {
+                mainScript += `add action=accept chain=prerouting dst-address-list=${targetVal} comment="${commentTag}"\n`;
+            }
+
+            let targetFilter = "";
+            if (targetType === 'address-list') targetFilter = `dst-address-list=!${targetVal}`;
+            else if (targetType === 'in-interface') targetFilter = `in-interface=${targetVal}`;
+            else if (targetType === 'in-interface-list') targetFilter = `in-interface-list=${targetVal}`;
+
+            let currentPccIndex = 0;
+            wans.forEach(wan => {
+                for (let r = 0; r < wan.ratio; r++) {
+                    mainScript += `add action=mark-connection chain=prerouting ${targetFilter} per-connection-classifier=both-addresses-and-ports:${totalShares}/${currentPccIndex} new-connection-mark=WAN${wan.id}_conn passthrough=yes comment="${commentTag}"\n`;
+                    currentPccIndex++;
+                }
+            });
+
+            wans.forEach(wan => {
+                let routeFilter = (targetType === 'address-list') ? `in-interface-list=!*0` : targetFilter;
+                mainScript += `add action=mark-routing chain=prerouting ${routeFilter} connection-mark=WAN${wan.id}_conn new-routing-mark=to_WAN${wan.id} passthrough=no comment="${commentTag}"\n`;
+            });
+
+            if (ros === 'ros6') {
+                mainScript += `\n/ip route\n`;
+                wans.forEach(wan => { mainScript += `add check-gateway=ping distance=1 gateway="${wan.gtw}" routing-mark=to_WAN${wan.id} comment="${commentTag}"\n`; });
+                wans.forEach((wan, idx) => { mainScript += `add check-gateway=ping distance=${idx+1} gateway="${wan.gtw}" comment="${commentTag}"\n`; });
+            } else {
+                mainScript += `\n/routing table\n`;
+                wans.forEach(wan => { mainScript += `add name=to_WAN${wan.id} fib comment="${commentTag}"\n`; });
+                mainScript += `\n/ip route\n`;
+                wans.forEach(wan => { mainScript += `add check-gateway=ping distance=1 gateway="${wan.gtw}" routing-table=to_WAN${wan.id} comment="${commentTag}"\n`; });
+                wans.forEach((wan, idx) => { mainScript += `add check-gateway=ping distance=${idx+1} gateway="${wan.gtw}" comment="${commentTag}"\n`; });
+            }
+
+            document.getElementById('main-script').value = mainScript;
+        }
+
+        function clearForm() {
+            document.getElementById('main-script').value = '';
+            document.getElementById('remove-script').value = '';
+        }
+
+        function copyToClipboard(id) {
+            const copyText = document.getElementById(id);
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("Skrip disalin!");
+        }
+
+        function setRandomQuote() {
+            const quotes = [
+                "Kewajiban kita hanyalah bekerja. Kewajiban rezeki ialah mengejar kita, bukan kita yang mengejar rezeki. — Anonim",
+                "Allah yang pertama, keluarga yang kedua, dan pekerjaan yang ketiga. Jangan sampai terbalik. — Anonim"
+            ];
+            const rand = Math.floor(Math.random() * quotes.length);
+            document.getElementById("random-quote").innerHTML = quotes[rand];
+        }
+    </script>
+</body>
+</html>

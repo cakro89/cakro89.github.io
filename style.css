@@ -1,0 +1,181 @@
+
+        /* --- RESET & BASE STYLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #eaf0f5; /* Warna background abu-abu gelap sesuai foto */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* --- CARD CONTAINER --- */
+        .card {
+            background-color: #fff7f7;
+            width: 100%;
+            max-width: 780px; /* Membatasi lebar maksimal agar tetap terlihat kecil/compact */
+            border-radius: 21px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- MAIN CONTENT LAYOUT --- */
+        .main-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Bagian Kiri: Logo & Ilustrasi */
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .logo-title span {
+            color: #d9534f; /* Warna merah pada kata 'Tikus' */
+        }
+
+        .logo-subtitle {
+            font-size: 11px;
+            font-style: italic;
+            color: #666;
+            margin-top: -2px;
+            margin-bottom: 15px;
+        }
+
+        .logo-subtitle span {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .illustration {
+            max-width: 160px;
+            width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        /* Bagian Kanan: Deskripsi & Tombol Menu */
+        .right-section {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .description {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .description strong {
+            color: #111;
+        }
+
+        /* Grid Tombol Utama */
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 12px;
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-link:hover {
+            background-color: #f0f0f0;
+            border-color: #bbb;
+        }
+
+        .btn-link.locked {
+            color: #999;
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+
+        /* --- QUOTE SECTION --- */
+        .quote-box {
+            background-color: #f1f3f5;
+            border-left: 4px solid #ced4da;
+            padding: 12px 15px;
+            font-size: 12px;
+            font-style: italic;
+            color: #495057;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* --- FOOTER NAV NAVIGATION --- */
+        .footer-nav {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            gap: 8px;
+        }
+
+        .btn-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 8px 5px;
+            font-size: 11px;
+            color: #495057;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .btn-nav:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* --- RESPONSIVE LAYOUT (UNTUK HP) --- */
+        @media (max-width: 600px) {
+            .main-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .button-grid {
+                grid-template-columns: 1fr; /* Tombol jadi 1 kolom berderet ke bawah di HP */
+            }
+
+            .footer-nav {
+                grid-template-columns: 1fr 1fr; /* Menu bawah jadi 2x2 di HP agar muat */
+            }
+        }
+ 

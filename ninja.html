@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kandang Kambing - MikroTik Ninja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Reset & Base Card Layout */
+        .page-header {
+            text-align: left;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            text-transform: uppercase;
+            margin: 0 0 4px 0;
+        }
+
+        .page-title span {
+            color: #dc3545;
+        }
+
+        .breadcrumb-nav {
+            font-size: 11px;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .topology-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 120px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Form Row - 3 Kolom Sejajar (Interface, Identity, MAC) */
+        .form-row-three {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1.3fr;
+            gap: 12px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        @media (max-width: 600px) {
+            .form-row-three {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 6px 10px;
+            font-size: 13px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            outline: none;
+            background-color: #f8f9fa;
+        }
+        .form-control:focus {
+            background-color: #fff;
+            border-color: #80bdff;
+        }
+
+        .mac-input-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-random {
+            padding: 0 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .btn-random:hover { background-color: #5a6268; }
+
+        /* Section Heading Checkbox */
+        .protection-heading {
+            font-size: 12px;
+            font-weight: 600;
+            color: #495057;
+            text-align: left;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #dee2e6;
+            padding-bottom: 5px;
+        }
+
+        /* Checkbox Grid - 4 Kolom Sesuai Gambar */
+        .checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            .checkbox-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #333;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            cursor: pointer;
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Baris Tombol Utama di Tengah */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: flex-start;
+        }
+
+        .btn-tool {
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-generate { background-color: #6c757d; }
+        .btn-generate:hover { background-color: #5a6268; }
+        .btn-clear { background-color: #6c757d; }
+        .btn-clear:hover { background-color: #5a6268; }
+        .btn-copy { background-color: #6c757d; }
+        .btn-copy:hover { background-color: #5a6268; }
+
+        /* Output Terminal Box di Paling Bawah */
+        .terminal-section {
+            text-align: left;
+            margin-top: 15px;
+        }
+
+        .terminal-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #495057;
+            margin-bottom: 6px;
+        }
+
+        .terminal-box {
+            width: 100%;
+            height: 250px;
+            background-color: #e9ecef;
+            color: #2b2b2b;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            resize: vertical;
+            overflow: auto;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        
+        <div class="page-header">
+            <h1 class="page-title">MIKROTIK <span>NINJA: HIDE ROUTERBOARD INFO</span> FROM ISP / WAN SCANNING</h1>
+            <div class="breadcrumb-nav">🏠 Beranda » KandangKambing » Mikrotik Ninja: Hide Routerboard Info From ISP / WAN Scanning</div>
+        </div>
+
+        <div class="topology-container">
+            <img class="topology-img" src="img/pcc.png" alt="MikroTik Ninja Shield" onerror="this.src='image_3e0bf0.png'">
+        </div>
+
+        <div class="form-row-three">
+            <div class="form-group">
+                <label>Interface WAN ISP</label>
+                <input type="text" id="interface-wan" class="form-control" value="ether1">
+            </div>
+            <div class="form-group">
+                <label>Ubah Identity</label>
+                <input type="text" id="new-identity" class="form-control" value="Ruijie EW1200 PRO">
+            </div>
+            <div class="form-group">
+                <label>Ubah Mac Address</label>
+                <div class="mac-input-group">
+                    <input type="text" id="new-mac" class="form-control" value="DE:DB:78:E7:1D:30">
+                    <button class="btn-random" onclick="generateRandomMac()">⚙️ Randommac</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="protection-heading">
+            Lebih Banyak Perlindungan dari Scanning Internet (WAN).
+        </div>
+
+        <div class="checkbox-container">
+            <label class="checkbox-item"><input type="checkbox" id="chk-winbox"> Block Winbox Scan</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-neighbor"> Block Neighbor</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-mac"> Block Mac Server</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-traceroute"> Block Traceroute</label>
+            
+            <label class="checkbox-item"><input type="checkbox" id="chk-romon"> Block RoMON</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-dns"> Block Open DNS</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-proxy"> Block Open PROXY</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-btest"> Block BTest</label>
+            
+            <label class="checkbox-item"><input type="checkbox" id="chk-snmp"> Block SNMP</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-dude"> Block The Dude</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-cloud"> Block IP Cloud</label>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-tool btn-generate" onclick="generateNinjaScript()">⚙️ Generate</button>
+            <button class="btn-tool btn-clear" onclick="clearForm()">🗑️ Clear</button>
+            <button class="btn-tool btn-copy" onclick="copyToClipboard('ninja-script')">📄 Copy</button>
+        </div>
+
+        <div class="terminal-section">
+            <div class="terminal-label">Copy-Paste ke Terminal Mikrotik!</div>
+            <textarea id="ninja-script" class="terminal-box" readonly placeholder="# Masukkan data di atas lalu klik tombol 'Generate'..."></textarea>
+        </div>
+
+        <div class="quote-box" id="random-quote">
+            "Jangan terlalu sibuk mengurusi kehidupan dunia, sehingga membuatmu lupa dengan kehidupan akhirat." — <em>Anonim</em>
+        </div>
+
+        <div class="footer-nav">
+            <a href="index.html" class="btn-nav">🏠 Beranda</a>
+            <a href="index.html" class="btn-nav">🔄 Kembali</a>
+            <a href="#" class="btn-nav" onclick="location.reload()">⚙️ Update</a>
+            <a href="#" class="btn-nav">📅 Jadwal Sholat</a>
+        </div>
+
+    </div>
+
+    <script>
+        window.onload = function() {
+            setRandomQuote();
+        };
+
+        function generateRandomMac() {
+            const hexDigits = "0123456789ABCDEF";
+            let macAddress = "DE:"; 
+            for (let i = 0; i < 5; i++) {
+                macAddress += hexDigits.charAt(Math.floor(Math.random() * 16));
+                macAddress += hexDigits.charAt(Math.floor(Math.random() * 16));
+                if (i < 4) macAddress += ":";
+            }
+            document.getElementById("new-mac").value = macAddress;
+        }
+
+        function generateNinjaScript() {
+            const wan = document.getElementById("interface-wan").value;
+            const identity = document.getElementById("new-identity").value;
+            const mac = document.getElementById("new-mac").value;
+            const commentTag = "by Kandang Kambing";
+
+            const now = new Date();
+            const dateString = now.toLocaleDateString('en-US');
+            const timeString = now.toLocaleTimeString('en-US');
+
+            let script = `################################################################\n`;
+            script += `# MIKROTIK NINJA : HIDE ROUTERBOARD INFO FROM ISP / WAN SCANNING\n`;
+            script += `# Date/Time: ${dateString}, ${timeString}\n`;
+            script += `# Created By: MikTool\n`;
+            script += `################################################################\n`;
+            script += `/interface list add name=wan-protect comment="MikroTik Ninja by Kandang Kambing"\n`;
+            script += `/interface list member add interface="${wan}" list=wan-protect comment="MikroTik Ninja by Kandang Kambing"\n`;
+
+            if(document.getElementById("chk-winbox").checked) {
+                script += `## Block Winbox Scan\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=21,22,23,8291,80,443,8728,8729 comment="Block Winbox Scan - ${commentTag}" in-interface-list=wan-protect protocol=tcp\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=21,22,23,8291,80,443,8728,8729 in-interface-list=wan-protect protocol=udp\n`;
+            }
+
+            if(document.getElementById("chk-neighbor").checked) {
+                script += `## Block Neighbor Discovery\n`;
+                script += `/ip firewall filter add action=drop chain=input comment="Block Neighbor Discovery - ${commentTag}" in-interface-list=wan-protect dst-port=5678 protocol=tcp\n`;
+                script += `/ip firewall filter add action=drop chain=input in-interface-list=wan-protect dst-port=5678 protocol=udp\n`;
+                script += `/ip neighbor discovery-settings set discover-interface-list=!wan-protect\n`;
+            }
+
+            if(document.getElementById("chk-mac").checked) {
+                script += `## Block MAC Address\n`;
+                script += `/ip firewall filter add action=drop chain=input comment="Block MAC Address - ${commentTag}" in-interface-list=wan-protect dst-port=20561 protocol=tcp\n`;
+                script += `/ip firewall filter add action=drop chain=input in-interface-list=wan-protect dst-port=20561 protocol=udp\n`;
+                script += `/tool mac-server mac-winbox set allowed-interface-list=none\n`;
+                script += `/tool mac-server set allowed-interface-list=none\n`;
+                script += `/tool mac-server ping set enabled=no\n`;
+            }
+
+            if(document.getElementById("chk-traceroute").checked) {
+                script += `## Block Traceroute\n`;
+                script += `/ip firewall filter add action=drop chain=input comment="Block Traceroute - ${commentTag}" in-interface-list=wan-protect dst-port=33434-33534 protocol=tcp\n`;
+                script += `/ip firewall filter add action=drop chain=input in-interface-list=wan-protect dst-port=33434-33534 protocol=udp\n`;
+            }
+
+            if(document.getElementById("chk-romon").checked) {
+                script += `## Block RoMON\n`;
+                script += `/tool romon port add disabled=no forbid=yes comment="Block RoMON - ${commentTag}" interface="${wan}"\n`;
+            }
+
+            if(document.getElementById("chk-dns").checked) {
+                script += `## Block DNS Poisoning\n`;
+                script += `/ip firewall filter add chain=input dst-port=53 in-interface-list=wan-protect protocol=tcp action=drop comment="Block Open Recursive DNS - ${commentTag}"\n`;
+                script += `/ip firewall filter add chain=input dst-port=53 in-interface-list=wan-protect protocol=udp action=drop\n`;
+            }
+
+            if(document.getElementById("chk-proxy").checked) {
+                script += `## Block Open PROXY\n`;
+                script += `/ip proxy set enabled=no\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=3128,8080 in-interface-list=wan-protect protocol=tcp comment="Block Open PROXY - ${commentTag}"\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=3128,8080 in-interface-list=wan-protect protocol=udp\n`;
+            }
+
+            if(document.getElementById("chk-btest").checked) {
+                script += `## Block BTest Server\n`;
+                script += `/tool bandwidth-server set enabled=no authenticate=yes\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=2000 in-interface-list=wan-protect protocol=tcp comment="Block BTest Server - ${commentTag}"\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=2000 in-interface-list=wan-protect protocol=udp\n`;
+            }
+
+            if(document.getElementById("chk-snmp").checked) {
+                script += `## Block SNMP\n`;
+                script += `/snmp set enabled=no\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=161,162 in-interface-list=wan-protect protocol=tcp comment="Block SNMP - ${commentTag}"\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=161,162 in-interface-list=wan-protect protocol=udp\n`;
+            }
+
+            if(document.getElementById("chk-dude").checked) {
+                script += `## Block The Dude\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=2210,2211 in-interface-list=wan-protect protocol=tcp comment="Block The Dude - ${commentTag}"\n`;
+                script += `/ip firewall filter add action=drop chain=input dst-port=2210,2211 in-interface-list=wan-protect protocol=udp\n`;
+            }
+
+            if(document.getElementById("chk-cloud").checked) {
+                script += `## Block IP Cloud\n`;
+                script += `/ip cloud set ddns-enabled=no\n`;
+                script += `/ip cloud advanced set use-local-address=no\n`;
+                script += `/ip cloud set update-time=no\n`;
+            }
+
+            if(identity || mac) {
+                script += `## Change MAC Interface\n`;
+                if(identity) script += `/system identity set name="${identity}"\n`;
+                if(mac) script += `/interface ethernet set "${wan}" mac-address="${mac}"\n`;
+            }
+
+            document.getElementById("ninja-script").value = script;
+        }
+
+        function clearForm() {
+            // Mengosongkan terminal dan mengembalikan checkbox ke uncheck saat di-clear
+            document.getElementById("ninja-script").value = '';
+            const checkboxes = document.querySelectorAll('.checkbox-container input[type="checkbox"]');
+            checkboxes.forEach(chk => chk.checked = false);
+        }
+
+        function copyToClipboard(id) {
+            const copyText = document.getElementById(id);
+            if(!copyText.value) return;
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("Skrip Ninja berhasil disalin!");
+        }
+
+        function setRandomQuote() {
+            const quotes = [
+                "Jangan terlalu sibuk mengurusi kehidupan dunia, sehingga membuatmu lupa dengan kehidupan akhirat. — Anonim"
+            ];
+            document.getElementById("random-quote").innerHTML = quotes[0];
+        }
+    </script>
+</body>
+</html>
