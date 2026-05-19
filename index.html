@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNET Online - Control Center</title>
+    <style>
+        :root {
+            --background: #030712;
+            --foreground: #f9fafb;
+            --muted: #9ca3af;
+            --primary: #ffffff;
+            --primary-inverse: #030712;
+            --border: rgba(255, 255, 255, 0.1);
+            --grid-color: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* NEXT.JS GRID BACKGROUND & GLOW EFFECT */
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+        }
+
+        .bg-glow {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(168, 85, 247, 0.05) 50%, transparent 100%);
+            filter: blur(60px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* HEADER NAVBAR */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 5%;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(3, 7, 18, 0.4);
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-box {
+            width: 18px;
+            height: 18px;
+            background-color: var(--primary);
+            border-radius: 4px;
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-left: 24px;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        /* MAIN HERO SECTION */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 100px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #38bdf8;
+            margin-bottom: 24px;
+            letter-spacing: 0.05em;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.06em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        /* TYPING & BLINK ANIMATION */
+        .typing-text {
+            display: inline-block;
+            border-right: 3px solid var(--primary);
+            white-space: nowrap;
+            overflow: hidden;
+            width: 0;
+            animation: 
+                typing 3.5s steps(30, end) infinite,
+                blink 0.75s step-end infinite;
+        }
+
+        p.subtitle {
+            font-size: 1.15rem;
+            color: var(--muted);
+            line-height: 1.6;
+            max-width: 600px;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        /* NEXT JS BUTTONS */
+        .cta-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-black {
+            background-color: var(--primary);
+            color: var(--primary-inverse);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-black:hover {
+            background-color: transparent;
+            color: var(--primary);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 0.8rem;
+            background: rgba(3, 7, 18, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        /* ANIMATIONS DEFINE */
+        @keyframes typing {
+            0% { width: 0 }
+            50% { width: 100% }
+            80% { width: 100% }
+            100% { width: 0 }
+        }
+
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.95); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            h1 { font-size: 2.2rem; letter-spacing: -0.04em; }
+            p.subtitle { font-size: 1rem; }
+            .cta-group { flex-direction: column; width: 100%; gap: 12px; }
+            .btn { text-align: center; width: 100%; }
+            nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- KOTAK-KOTAK BACKGROUND & RADIAL GLOW -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo">
+            <div class="logo-box"></div>
+            VNET-MEDIA
+        </div>
+        <nav>
+            <a href="#">Dashboard</a>
+            <a href="#">Tenants</a>
+            <a href="#">Billing</a>
+            <a href="#">Docs</a>
+        </nav>
+    </header>
+
+    <!-- HERO MAIN CONTENT -->
+    <main>
+        <div class="badge">v2.0-Alpha Release</div>
+        <h1>
+            <span class="typing-text">Multi-Tenant Control Center.</span>
+        </h1>
+        <p class="subtitle">Satu dasbor terintegrasi untuk mengelola distribusi bandwidth OLT, otomasi skrip routing MikroTik, isolasi client, hingga billing gateway.</p>
+        
+        <div class="cta-group">
+            <a href="#" class="btn btn-black">Deploy Engine</a>
+            <a href="#" class="btn btn-outline">Baca Dokumentasi</a>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        Powered by Next-Gen Core &copy; 2026 VNET Online. All rights reserved.
+    </footer>
+
+</body>
+</html>
