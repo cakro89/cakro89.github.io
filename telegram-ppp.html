@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MikroTik Telegram PPP Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base Styles */
+        body { font-family: 'Inter', sans-serif; background: #f4f6f9; padding: 15px; color: #333; margin: 0; }
+        .card { background: white; max-width: 900px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        /* Header Section */
+        .page-header { border-bottom: 1px solid #e9ecef; margin-bottom: 20px; padding-bottom: 10px; }
+        .page-title { font-size: 16px; font-weight: 700; color: #333; text-transform: uppercase; margin: 0 0 5px 0; }
+        .page-title span { color: #dc3545; }
+        .breadcrumb-nav { font-size: 11px; color: #6c757d; display: flex; gap: 5px; align-items: center; }
+        .breadcrumb-nav a { color: #6c757d; text-decoration: none; }
+        .breadcrumb-nav a:hover { text-decoration: underline; }
+
+        /* Topology Logo Image */
+        .topology-container { text-align: center; margin-bottom: 20px; }
+        .topology-img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+        /* Input Grid Wrapper */
+        .input-wrapper { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr auto; 
+            gap: 20px; 
+            align-items: end; 
+            margin-bottom: 25px; 
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        /* Form Group Styles */
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 12px; font-weight: 600; color: #495057; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; font-size: 13px; }
+        
+        /* Generate Button */
+        .btn-generate { padding: 10px 25px; background: #dc3545; color: white; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; height: 42px; text-transform: uppercase; }
+        .btn-generate:hover { background-color: #c82333; }
+
+        /* Responsive Behavior for Input Area (HP Mode) */
+        @media (max-width: 768px) {
+            .input-wrapper { grid-template-columns: 1fr; }
+            .btn-generate { width: 100%; margin-top: 10px; }
+        }
+
+        /* Terminal Output Grid (PC/Responsive) */
+        .terminal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .terminal-wrap { display: flex; flex-direction: column; gap: 8px; }
+        .terminal-label { font-size: 12px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .terminal-label-text { color: #495057; }
+        .terminal-box { width: 99%; height: 60px; background: #e9ecef; font-family: 'Courier New', Courier, monospace; font-size: 11px; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; resize: vertical; }
+        
+        /* Copy Button Styles */
+        .btn-copy { padding: 4px 10px; background: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .btn-copy:hover { background-color: #5a6268; }
+
+        /* Footer Section */
+        .footer-card { margin-top: 30px; }
+        .quote-box { background: #fafafa; border: 1px solid #e9ecef; border-radius: 6px; padding: 15px; text-align: center; font-size: 13px; color: #495057; }
+        .footer-nav { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .btn-nav { text-align: center; text-decoration: none; padding: 10px; background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; font-size: 12px; font-weight: 600; color: #333; }
+        .btn-nav:hover { background-color: #e2e6ea; }
+        
+        /* Bottom Copyright Text */
+        .footer-copy { text-align: center; margin-top: 20px; font-size: 11px; color: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="page-header">
+            <h1 class="page-title">MIKROTIK <span>TELEGRAM PPP</span> GENERATOR</h1>
+            <div class="breadcrumb-nav">
+                🏠 <a href="/">Beranda</a> » Telegram PPP Notification Generator
+            </div>
+        </div>
+
+        <div class="topology-container">
+            <img class="topology-img" src="img/ppp.png" alt="Telegram PPP Notifier Logo">
+        </div>
+
+        <div class="input-wrapper">
+            <div class="form-group">
+                <label>Telegram Bot Token</label>
+                <input type="text" id="bot-token" class="form-control" placeholder="123456:ContohTokenBotDisini">
+            </div>
+            <div class="form-group">
+                <label>Telegram Chat ID</label>
+                <input type="text" id="chat-id" class="form-control" placeholder="-1002153081388">
+            </div>
+            <button class="btn-generate" onclick="generateAll()">⚙️ GENERATE</button>
+        </div>
+
+        <div class="terminal-grid">
+            <div class="terminal-wrap">
+                <div class="terminal-label">
+                    <span class="terminal-label-text">Copy ke kolom PPP Profile: On Up</span> 
+                    <button class="btn-copy" onclick="copyBox('script-login')">📄 Copy</button>
+                </div>
+                <textarea id="script-login" class="terminal-box" readonly placeholder="# Hasil skrip login muncul di sini..."></textarea>
+            </div>
+            <div class="terminal-wrap">
+                <div class="terminal-label">
+                    <span class="terminal-label-text">Copy ke kolom PPP Profile: On Down</span> 
+                    <button class="btn-copy" onclick="copyBox('script-logout')">📄 Copy</button>
+                </div>
+                <textarea id="script-logout" class="terminal-box" readonly placeholder="# Hasil skrip logout muncul di sini..."></textarea>
+            </div>
+        </div>
+
+        <div class="footer-card">
+            <div class="quote-box">
+                "Ada begitu banyak masalah yang kita alami setiap hari, masalah pekerjaan, rumah, hubungan, kehidupan. Tapi kita lupa bahwa masalah terbesar kita adalah permasalahan iman." — <em>Anonim</em>
+            </div>
+            
+            <div class="footer-nav">
+                <a href="/" class="btn-nav">🏠 Beranda</a>
+                <a href="/" class="btn-nav">🔄 Kembali</a>
+                
+            </div>
+        </div>
+
+        <div class="footer-copy">©ode is Poetry 2026</div>
+    </div>
+
+    <script>
+        function generateAll() {
+            const token = document.getElementById('bot-token').value;
+            const chatid = document.getElementById('chat-id').value;
+            if(!token || !chatid) { alert("Isi Bot Token & Chat ID dulu Bos!"); return; }
+
+            // Script Login
+            let login = `:log warning "PPPOE $user login kembali.";\n\n:local datetime ("📅-Tanggal: " . [/system clock get date] . " %0A⏰-Jam: " . [/system clock get time]);\n:local status ""; :foreach pppuser in=[/ppp secret find] do={ :local pppname [/ppp secret get $pppuser name]; :do { :local tmp [/ppp active get [find where name="$pppname"]] } on-error={ :set status ($status . $pppname . ",%0A") } };\n:local secret [/ppp secret print count]; :local active [/ppp active print count]; :local terputus ($secret - $active);\n:local m ("✅*ONLINE*%0A========================%0A" . $datetime . "%0A🙋‍♂️ Nama : " . $user . "%0A📲 Info : " . [/ppp secret get [find name=$user] comment] . "%0A🆔 IP Address : " . $address . "%0A📡 Paket : " . [/ppp secret get [find name=$user] profile] . "%0A========================%0A🚨Last Disconnect: " . [/ppp secret get [find name=$user] last-disconnect-reason] . "%0A⏰Last Logout: " . [/ppp secret get [find name=$user] last-logged-out] . "%0A🆔Caller ID: " . [/ppp secret get [find name=$user] last-caller-id] . "%0A========================%0A" . $secret . "🐦Total Pelanggan%0A" . $active . "🐦Total Active%0A" . $terputus . "🐦Modem Mati%0A========================%0A*User Terputus*: %0A" . $status); \n/tool fetch url=("https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatid}&text=" . $m . "&parse_mode=markdown") mode=https keep-result=no http-header-field="Content-Type: application/x-www-form-urlencoded; charset=UTF-8, User-Agent: Firefox";`;
+            
+            // Script Logout
+            let logout = `:log warning "PPPOE $user log OFF.";\n\n:local status ""; :foreach pppuser in=[/ppp secret find] do={ :local pppname [/ppp secret get $pppuser name]; :do { :local tmp [/ppp active get [find where name="$pppname"]] } on-error={ :set status ($status . $pppname . ",%0A") } };\n:local secret [/ppp secret print count]; :local active [/ppp active print count]; :local terputus ($secret - $active);\n:local m ("❌ *OFFLINE*%0A👤 Nama  : " . $user . "%0A%0AUser Terputus *(" . $terputus . ")*: %0A" . $status); \n/tool fetch url=("https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatid}&text=" . $m . "&parse_mode=markdown") mode=https keep-result=no http-header-field="Content-Type: application/x-www-form-urlencoded; charset=UTF-8, User-Agent: Firefox";`;
+
+            document.getElementById('script-login').value = login;
+            document.getElementById('script-logout').value = logout;
+        }
+
+        function copyBox(id) {
+            const copyText = document.getElementById(id);
+            copyText.select();
+            document.execCommand("copy");
+            alert("Skrip disalin!");
+        }
+    </script>
+</body>
+</html>
