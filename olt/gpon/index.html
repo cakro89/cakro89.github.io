@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VNETMEDIA - Dashboard OLT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --accent: #00d2ff;
+            --accent-glow: rgba(0, 210, 255, 0.4);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-dim: #b0b0b0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* Video Background */
+        #video-background {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: saturate(1.5) brightness(0.3);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-dark) 90%);
+            z-index: -1;
+        }
+
+        header {
+            margin-top: 60px;
+            text-align: center;
+            animation: fadeInDown 1s ease both;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        /* Menu Grid */
+        .menu-container {
+            margin: 50px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            padding: 20px;
+            animation: fadeInUp 1s ease 0.3s both;
+        }
+
+        .menu-card {
+            text-decoration: none;
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        /* Hover Effect */
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, transparent, var(--accent-glow), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            background: rgba(0, 210, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--accent-glow);
+        }
+
+        .menu-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .emoji-box {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+            transition: 0.3s;
+        }
+
+        .menu-card:hover .emoji-box {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .brand-name {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 30px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .menu-container { grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px; }
+            .menu-card { padding: 20px 10px; }
+            header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted loop id="video-background">
+        <source src="https://static.videezy.com/system/resources/previews/000/049/195/original/1_05_20207.mp4" type="video/mp4">
+    </video>
+    <div class="overlay"></div>
+
+    <header>
+        <p>Expert Configuration</p>
+        <h1>GPON OLT</h1>
+    </header>
+
+    <div class="menu-container">
+        <a href="c-data/" class="menu-card">
+            <div class="emoji-box">⚙️</div>
+            <div class="brand-name">C-DATA</div>
+        </a>
+
+        <a href="global/" class="menu-card">
+            <div class="emoji-box">🌍</div>
+            <div class="brand-name">GLOBAL</div>
+        </a>
+
+        <a href="hsgq/" class="menu-card">
+            <div class="emoji-box">⚡</div>
+            <div class="brand-name">HSGQ</div>
+        </a>
+
+        <a href="zymlink/" class="menu-card">
+            <div class="emoji-box">⛓️</div>
+            <div class="brand-name">ZYMLINK</div>
+        </a>
+
+        <a href="joolink/" class="menu-card">
+            <div class="emoji-box">📞</div>
+            <div class="brand-name">JOOLINK</div>
+        </a>
+
+        <a href="vsol/" class="menu-card">
+            <div class="emoji-box">💡</div>
+            <div class="brand-name">VSOL</div>
+        </a>
+
+        <a href="hioso/" class="menu-card">
+            <div class="emoji-box">💻</div>
+            <div class="brand-name">HIOSO</div>
+        </a>
+
+        <a href="zte/" class="menu-card">
+            <div class="emoji-box">📶</div>
+            <div class="brand-name">ZTE</div>
+        </a>
+
+        <a href="fiberhome/" class="menu-card">
+            <div class="emoji-box">🏠</div>
+            <div class="brand-name">FIBERHOME</div>
+        </a>
+
+        <a href="hifocus/" class="menu-card">
+            <div class="emoji-box">🎯</div>
+            <div class="brand-name">HIFOCUS</div>
+        </a>
+    </div>
+
+    <footer>
+        &copy; 2026 <span style="color: var(--accent);">VNETMEDIA</span> • PREMIUM NETWORK SOLUTIONS
+    </footer>
+
+</body>
+</html>

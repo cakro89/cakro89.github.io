@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>OLT CONFIG | MIDNIGHT TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --card-bg: rgba(15, 15, 15, 0.8);
+            --accent: #00f3ff;
+            --accent-glow: rgba(0, 243, 255, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border: #1a1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        /* Scanline Effect */
+        body::after {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            z-index: 9999;
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* Navbar */
+        nav {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 700; letter-spacing: 1px; }
+        .home-btn { color: #fff; text-decoration: none; font-weight: 600; font-size: 0.9rem; padding: 5px 15px; border: 1px solid var(--accent); border-radius: 5px; transition: 0.3s; }
+        .home-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); }
+
+        /* Header */
+        header { padding: 60px 20px 20px; text-align: center; }
+        header h1 { font-size: 2.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: -1px; margin-bottom: 10px; }
+        header span { color: var(--accent); text-shadow: 0 0 20px var(--accent-glow); }
+
+        /* Container & Cards */
+        .container { max-width: 850px; margin: auto; padding: 20px; }
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            transition: 0.4s;
+            position: relative;
+        }
+        .step-card:hover { border-color: var(--accent); box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-5px); }
+        
+        .step-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .step-num { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; color: var(--accent); font-weight: 700; opacity: 0.5; }
+        .step-card h2 { font-size: 1.4rem; color: #fff; }
+
+        .step-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px; }
+
+        /* Code Block */
+        .code-box { position: relative; background: #000; border: 1px solid #222; border-radius: 8px; padding: 15px; margin: 15px 0; }
+        pre code { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 0.9rem; }
+        .copy-btn { position: absolute; right: 10px; top: 10px; background: #222; border: none; color: var(--accent); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.7rem; font-weight: bold; }
+        .copy-btn:hover { background: var(--accent); color: #000; }
+
+        /* Images */
+        .img-wrap { margin-top: 20px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: #050505; }
+        .img-wrap img { width: 100%; display: block; filter: grayscale(20%); transition: 0.5s ease; cursor: zoom-in; }
+        .img-wrap img:hover { filter: grayscale(0%); transform: scale(1.02); }
+
+        /* Modal Zoom */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(10px); }
+        .modal.active { display: flex; }
+        .modal img { max-width: 90%; max-height: 85%; border: 1px solid var(--accent); border-radius: 5px; box-shadow: 0 0 50px rgba(0,0,0,1); }
+
+        footer { text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 40px; }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .step-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fas fa-terminal"></i> OLT_ENGINEER.v1</div>
+        <a href="/" class="home-btn">BERANDA</a>
+    </nav>
+
+    <header>
+        <h1>SETTING OLT <span>C-DATA</span></h1>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Protokol Konfigurasi VLAN & Interface Management</p>
+    </header>
+
+    <div class="container">
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-num">01</span>
+                <h2>Authentication Access</h2>
+            </div>
+            <p>Akses OLT via Web Browser menggunakan IP Default. Gunakan kredensial resmi di bawah ini.</p>
+            <div class="code-box">
+                <button class="copy-btn" onclick="copyCode('c1', this)">COPY</button>
+                <pre><code id="c1">IP: 192.168.100.100 | User: root | Pass: admin</code></pre>
+            </div>
+            <div class="img-wrap">
+                <img src="img/1.png" alt="Login">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-num">02</span>
+                <h2>VLAN Planning</h2>
+            </div>
+            <p>Masuk ke menu <b>Configuration → VLAN</b>. Masukkan daftar VLAN ID sesuai alokasi ISP Anda.</p>
+            <div class="code-box">
+                <button class="copy-btn" onclick="copyCode('c2', this)">COPY</button>
+                <pre><code id="c2">VLAN_LIST: 10, 20, 30, 100</code></pre>
+            </div>
+            <div class="img-wrap">
+                <img src="img/4.png" alt="VLAN">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-num">03</span>
+                <h2>Uplink Configuration</h2>
+            </div>
+            <p>Mapping VLAN pada port GE atau XGE UPLINK yang terhubung ke Mikrotik.</p>
+            <div class="img-wrap">
+                <img src="img/7.png" alt="Uplink">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-num">04</span>
+                <h2>Commit & Save</h2>
+            </div>
+            <p>Simpan semua konfigurasi agar tidak hilang saat perangkat mati (Power Loss).</p>
+            <div class="code-box">
+                <button class="copy-btn" onclick="copyCode('c3', this)">COPY</button>
+                <pre><code id="c3">Status: Successfully Saved ✅</code></pre>
+            </div>
+            <div class="img-wrap">
+                <img src="img/11.png" alt="Final">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 NETWORK SYSTEM LAB. NO_INDEX_ACTIVE.
+    </footer>
+
+    <div class="modal" id="zoomModal">
+        <img src="" id="modalImg" alt="Zoom">
+    </div>
+
+    <script>
+        // Zoom Modal
+        const modal = document.getElementById('zoomModal');
+        const modalImg = document.getElementById('modalImg');
+        document.querySelectorAll('.step-card img').forEach(img => {
+            img.onclick = () => {
+                modal.classList.add('active');
+                modalImg.src = img.src;
+            }
+        });
+        modal.onclick = () => modal.classList.remove('active');
+
+        // Copy Function
+        function copyCode(id, btn) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            const originalText = btn.innerText;
+            btn.innerText = "COPIED!";
+            btn.style.backgroundColor = "#00f3ff";
+            btn.style.color = "#000";
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.backgroundColor = "#222";
+                btn.style.color = "#00f3ff";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

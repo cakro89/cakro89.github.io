@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>HSGQ GPON CONFIG | MIDNIGHT</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #000000;
+            --card-bg: #0a0a0a;
+            --accent: #00d2ff;
+            --accent-glow: rgba(0, 210, 255, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #777777;
+            --border: #1a1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 700; }
+
+        header { padding: 40px 20px 10px; text-align: center; }
+        header h1 { font-size: 2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        header span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+
+        .container { max-width: 850px; margin: auto; padding: 20px; }
+        
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: 0.3s;
+        }
+        .step-card:hover { border-color: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
+        
+        .step-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .step-num { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 1.2rem; }
+
+        .info-box {
+            background: #000; border-left: 3px solid var(--accent);
+            padding: 12px; margin: 15px 0; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem; color: var(--accent);
+        }
+
+        .img-wrap { margin-top: 15px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #050505; }
+        .img-wrap img { width: 100%; display: block; cursor: zoom-in; transition: 0.4s; }
+        .img-wrap img:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+        /* MODAL FULLSCREEN */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; justify-content: center; align-items: center;
+            z-index: 2000; cursor: pointer;
+            backdrop-filter: blur(8px);
+        }
+        .modal.active { display: flex; }
+        .modal img {
+            max-width: 95%; max-height: 90%;
+            border-radius: 4px; border: 1px solid var(--accent);
+            box-shadow: 0 0 40px var(--accent-glow);
+            cursor: default;
+            animation: zoomEffect 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes zoomEffect {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">> HSGQ_SYSTEM_VLAN</div>
+        <div style="color: var(--accent); font-size: 0.7rem; letter-spacing: 1px;">STATUS: ONLINE</div>
+    </nav>
+
+    <header>
+        <h1>HSGQ <span>2-PON</span> CONFIGURATION</h1>
+    </header>
+
+    <div class="container">
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">01</span><h2>Topology</h2></div>
+            <p>Pastikan alur kabel dari Mikrotik ke port Uplink GE OLT sudah benar.</p>
+            <div class="img-wrap"><img src="img/1.png" alt="Langkah 1"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">02</span><h2>Ganti IP PC</h2></div>
+            <p>Atur IP komputer agar satu jaringan dengan OLT.</p>
+            <div class="info-box">PC IP: 192.168.99.25 | OLT IP: 192.168.99.1</div>
+            <div class="img-wrap"><img src="img/2.png" alt="Langkah 2"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">03</span><h2>Login Sistem</h2></div>
+            <div class="info-box">User: root | Pass: admin</div>
+            <div class="img-wrap"><img src="img/3.png" alt="Langkah 3"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">04</span><h2>VLAN Database</h2></div>
+            <p>Klik menu VLAN dan tambahkan ID VLAN yang Anda butuhkan.</p>
+            <div class="info-box">Contoh: 10, 20, 30</div>
+            <div class="img-wrap"><img src="img/4.png" alt="Langkah 4"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">05</span><h2>Enable VLAN</h2></div>
+            <p>Pastikan VLAN yang dibuat sudah di-enable di sistem.</p>
+            <div class="img-wrap"><img src="img/5.png" alt="Langkah 5"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">06</span><h2>Create VLAN Entity</h2></div>
+            <p>Konfigurasi pembuatan entitas VLAN pada port.</p>
+            <div class="img-wrap"><img src="img/6.png" alt="Langkah 6"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">07</span><h2>VLAN Routing GE & PON</h2></div>
+            <p>Pilih port GE (Uplink) dan PON sesuai kebutuhan distribusi.</p>
+            <div class="img-wrap"><img src="img/7.png" alt="Langkah 7"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">08</span><h2>Tagging Name</h2></div>
+            <p>Tandai nama VLAN agar manajemen jaringan lebih mudah diidentifikasi.</p>
+            <div class="img-wrap"><img src="img/8.png" alt="Langkah 8"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">09</span><h2>DBA Profile</h2></div>
+            <p>Pengaturan alokasi bandwidth (DBA). Bisa dilewati jika menggunakan default.</p>
+            <div class="img-wrap"><img src="img/9.png" alt="Langkah 9"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">10</span><h2>Line Profile</h2></div>
+            <p>Tambahkan Line Profile untuk menghubungkan ONU ke OLT.</p>
+            <div class="img-wrap"><img src="img/10.png" alt="Langkah 10"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">11</span><h2>Gemport Configuration</h2></div>
+            <p>Hubungkan Gemport ke VLAN ID masing-masing layanan.</p>
+            <div class="img-wrap"><img src="img/11.png" alt="Langkah 11"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">12</span><h2>Mapping VLAN</h2></div>
+            <p>Lakukan mapping akhir antara VLAN, Gemport, dan User Port.</p>
+            <div class="img-wrap"><img src="img/12.png" alt="Langkah 12"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">13</span><h2>Remote Management</h2></div>
+            <p>Atur IP Remote VLAN agar OLT bisa diremote dari luar jaringan lokal.</p>
+            <div class="img-wrap"><img src="img/13.png" alt="Langkah 13"></div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-header"><span class="step-num">14</span><h2>Maintenance & Save</h2></div>
+            <p>Set Waktu (NTP), User Manager, dan simpan konfigurasi permanen.</p>
+            <div class="info-box" style="border-color: #ff3300; color: #ff3300;">
+                PENTING: Wajib klik "SAVE CONFIGURATION" agar setting tidak hilang.
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 HSGQ TECH GUIDE. PRIVATE_DOCUMENTATION.
+    </footer>
+
+    <div class="modal" id="imageModal">
+        <img src="" id="fullImage" alt="Zoomed View">
+    </div>
+
+    <script>
+        const modal = document.getElementById('imageModal');
+        const fullImg = document.getElementById('fullImage');
+
+        // Buka Modal saat Gambar diklik
+        document.querySelectorAll('.img-wrap img').forEach(img => {
+            img.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                modal.classList.add('active');
+                fullImg.src = img.src;
+            });
+        });
+
+        // Tutup Modal saat klik area luar gambar (modal itu sendiri)
+        modal.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Jangan tutup jika yang diklik adalah gambarnya
+        fullImg.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Tutup dengan ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") modal.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

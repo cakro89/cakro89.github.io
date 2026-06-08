@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Tutorial OLT Ringkas & Elegan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #121212;
+      --card-bg: #1e1e1e;
+      --text-color: #e0e0e0;
+      --highlight-color: #40c4ff;
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --transition-speed: 0.3s;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Cursor glow */
+    .glow-cursor {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--highlight-color);
+      box-shadow: 0 0 8px var(--highlight-color), 0 0 20px var(--highlight-color);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      opacity: 0.6;
+      z-index: 999;
+      transition: transform 0.1s ease;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: var(--card-bg);
+      padding: 12px 20px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 6px var(--shadow-color);
+      position: sticky;
+      top: 0;
+      z-index: 500;
+    }
+    .navbar a {
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .navbar .home-btn {
+      background: var(--highlight-color);
+      color: #121212;
+    }
+    .navbar .home-btn:hover {
+      background: #0099cc;
+      color: #fff;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 30px 15px;
+      background: var(--card-bg);
+      border-bottom: 2px solid var(--highlight-color);
+      box-shadow: 0 2px 10px var(--shadow-color);
+    }
+    header h1 {
+      font-size: 2rem;
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      text-shadow: 0 0 10px var(--highlight-color);
+    }
+
+    /* Container & Cards */
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 20px;
+    }
+    .step-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 2px 8px var(--shadow-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .step-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.4), 0 0 12px var(--highlight-color);
+    }
+    .step-card h2 {
+      font-size: 1.3rem;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--highlight-color);
+    }
+    .step-card .step-number {
+      background: var(--highlight-color);
+      color: #121212;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .step-card pre {
+      background: #222;
+      padding: 10px;
+      border-left: 3px solid var(--highlight-color);
+      border-radius: 6px;
+      overflow-x: auto;
+      color: #8be9fd;
+      font-family: monospace;
+    }
+    .step-card img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .step-card img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 12px var(--highlight-color);
+    }
+
+    /* Modal Zoom */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal.active { display: flex; }
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+      box-shadow: 0 0 20px var(--highlight-color);
+      animation: zoomIn 0.3s ease;
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 40px;
+      color: #fff;
+      cursor: pointer;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.85rem;
+      background: var(--card-bg);
+      border-top: 1px solid #2a2a2a;
+      margin-top: 30px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      .glow-cursor { display: none; }
+      header h1 { font-size: 1.5rem; }
+      .step-card { padding: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow-cursor"></div>
+
+  <nav class="navbar">
+    <a href="/" class="home-btn">Beranda</a>
+  </nav>
+
+  <header>
+    <h1>Setting OLT C-DATA VLAN</h1>
+  </header>
+
+  <div class="container">
+    <!-- Contoh Step -->
+<div class="container" id="tutorial-container">
+  <!-- Step 1 -->
+  <div class="step-card">
+    <h2><span class="step-number">1</span> Login ke OLT</h2>
+    <p>Gunakan kredensial default untuk masuk ke perangkat OLT.</p>
+    <pre><code>username: root
+password: admin</code></pre>
+    <img src="img/1.png" alt="Langkah 1">
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-card">
+    <h2><span class="step-number">2</span> Masuk Configuration</h2>
+    <p>Klik menu konfigurasi.</p>
+    <pre><code>ok lanjut brooo</code></pre>
+    <img src="img/2.png" alt="Langkah 2">
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-card">
+    <h2><span class="step-number">3</span> Pilih VLAN Planning</h2>
+    <p>Pilih menu VLAN Planning.</p>
+    <pre><code>Menu → VLAN</code></pre>
+    <img src="img/3.png" alt="Langkah 3">
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-card">
+    <h2><span class="step-number">4</span> Tambah VLAN Baru</h2>
+    <p>Buat VLAN baru sesuai kebutuhan jaringan.</p>
+    <pre><code>VLAN ID: 10, 20, 30</code></pre>
+    <img src="img/4.png" alt="Langkah 4">
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step-card">
+    <h2><span class="step-number">5</span> Beri Nama VLAN</h2>
+    <p>Tambahkan VLAN dengan nama yang sesuai dan simpan.</p>
+    <pre><code>VLAN 10 → Internet
+VLAN 20 → IPTV</code></pre>
+    <img src="img/5.png" alt="Langkah 5">
+  </div>
+
+  <!-- Step 6 -->
+  <div class="step-card">
+    <h2><span class="step-number">6</span> Atur Port VLAN</h2>
+    <p>Tentukan port mana yang masuk ke VLAN tersebut.</p>
+    <pre><code>Port 1-4 → VLAN 10</code></pre>
+    <img src="img/6.png" alt="Langkah 6">
+  </div>
+
+  <!-- Step 7 -->
+  <div class="step-card">
+    <h2><span class="step-number">7</span> Konfirmasi Setting</h2>
+    <p>Periksa kembali pengaturan VLAN sebelum menyimpan.</p>
+    <pre><code>show vlan</code></pre>
+    <img src="img/7.png" alt="Langkah 7">
+  </div>
+
+  <!-- Step 8 -->
+  <div class="step-card">
+    <h2><span class="step-number">8</span> Simpan Konfigurasi</h2>
+    <p>Klik tombol <b>Save</b> agar konfigurasi tidak hilang setelah restart.</p>
+    <pre><code>save config</code></pre>
+    <img src="img/8.png" alt="Langkah 8">
+  </div>
+
+  <!-- Step 9 -->
+  <div class="step-card">
+    <h2><span class="step-number">9</span> Restart OLT</h2>
+    <p>Lakukan restart agar konfigurasi VLAN aktif.</p>
+    <pre><code>reboot</code></pre>
+    <img src="img/9.png" alt="Langkah 9">
+  </div>
+
+  <!-- Step 10 -->
+  <div class="step-card">
+    <h2><span class="step-number">10</span> Verifikasi VLAN</h2>
+    <p>Pastikan VLAN sudah aktif dan berjalan.</p>
+    <pre><code>ping test → success</code></pre>
+    <img src="img/10.png" alt="Langkah 10">
+  </div>
+
+  <!-- Step 11 -->
+  <div class="step-card">
+    <h2><span class="step-number">11</span> Selesai</h2>
+    <p>Tutorial selesai, perangkat sudah siap digunakan.</p>
+    <pre><code>OLT Ready ✅</code></pre>
+    <img src="img/11.png" alt="Langkah 11">
+  </div>
+</div>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Tutorial OLT. Dibuat dengan ❤.
+  </footer>
+
+  <!-- Modal Zoom -->
+  <div id="imageModal" class="modal">
+    <span class="close-btn">&times;</span>
+    <img id="modalImage" src="" alt="Zoom">
+  </div>
+
+  <script>
+    const glowCursor = document.querySelector('.glow-cursor');
+    document.addEventListener('mousemove', e => {
+      glowCursor.style.left = e.clientX + 'px';
+      glowCursor.style.top = e.clientY + 'px';
+    });
+
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const closeBtn = document.querySelector('.close-btn');
+
+    document.querySelectorAll('.step-card img').forEach(img => {
+      img.addEventListener('click', () => {
+        modal.classList.add('active');
+        modalImage.src = img.src;
+      });
+    });
+
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', e => {
+      if (e.target === modal) modal.classList.remove('active');
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === "Escape") modal.classList.remove('active');
+    });
+  </script>
+</body>
+</html>

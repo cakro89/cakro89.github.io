@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Keterangan</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f4f6f9; padding: 20px; color: #333; }
+        .card { background: white; max-width: 900px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        
+        .item-row { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 20px; }
+        
+        .number-box { 
+            background: #dc3545; color: white; width: 30px; height: 30px; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 50%; font-weight: bold; flex-shrink: 0;
+        }
+        
+        .info-box { flex-grow: 1; }
+        .info-title { font-weight: 700; margin-bottom: 5px; display: block; }
+        
+        /* Box Terminal */
+        .code-box { 
+            background: #272822; color: #f8f8f2; padding: 12px; 
+            border-radius: 4px; font-family: 'Courier New', Courier, monospace; 
+            font-size: 13px; margin-top: 5px; cursor: pointer;
+            border: 1px solid #444;
+        }
+        .code-box:hover { background: #3e3d32; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h3>Mikrotik Script</h3>
+        
+        <div class="item-row">
+            <div class="number-box">1</div>
+            <div class="info-box">
+                <span class="info-title">DHCP-Client</span>
+                <div class="info-desc">Klik kode di bawah untuk menyalin:</div>
+                <div class="code-box" onclick="copyToClipboard('/ip dhcp-client add interface=ether1 disabled=no')">
+                    /ip dhcp-client add interface=ether1 disabled=no
+                </div>
+            </div>
+        </div>
+               <div class="item-row">
+            <div class="number-box">2</div>
+            <div class="info-box">
+                <span class="info-title">Reset Mikrotik</span>
+                <div class="info-desc">Klik kode di bawah untuk menyalin:</div>
+                <div class="code-box" onclick="copyToClipboard('/system reset-configuration no-defaults=yes skip-backup=yes')">
+                    /system reset-configuration no-defaults=yes skip-backup=yes
+                </div>
+            </div>
+        </div>
+
+               <div class="item-row">
+            <div class="number-box">3</div>
+            <div class="info-box">
+                <span class="info-title">Cek Mode </span>
+                <div class="info-desc">Klik kode di bawah untuk menyalin:</div>
+                <div class="code-box" onclick="copyToClipboard('/system/device-mode/print')">
+                    /system/device-mode/print
+                </div>
+            </div>
+        </div>
+                       <div class="item-row">
+            <div class="number-box">4</div>
+            <div class="info-box">
+                <span class="info-title">Update Mode advance</span>
+                <div class="info-desc">Klik kode di bawah untuk menyalin:</div>
+                <div class="code-box" onclick="copyToClipboard('/system/device-mode/update mode=advanced')">
+                    /system/device-mode/update mode=advanced
+                </div>
+            </div>
+        </div>
+                       <div class="item-row">
+            <div class="number-box">5</div>
+            <div class="info-box">
+                <span class="info-title">DHCP-Client</span>
+                <div class="info-desc">Klik kode di bawah untuk menyalin:</div>
+                <div class="code-box" onclick="copyToClipboard('/ip dhcp-client add interface=ether1 disabled=no')">
+                    /ip dhcp-client add interface=ether1 disabled=no
+                </div>
+            </div>
+        </div>
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+        
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Kode berhasil disalin: " + text);
+            });
+        }
+    </script>
+</body>
+</html>

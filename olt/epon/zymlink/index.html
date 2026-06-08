@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>ZYMLINK CONFIG | MIDNIGHT EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #000000;
+            --card: #0a0a0a;
+            --accent: #00ff66; /* Hijau Cyber */
+            --accent-dim: rgba(0, 255, 102, 0.15);
+            --border: #1a1a1a;
+            --text: #ffffff;
+            --text-dim: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Scanline Effect ala Monitor Jadul */
+        body::before {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        nav {
+            background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: bold; text-decoration: none; }
+
+        header {
+            padding: 60px 5% 20px;
+            text-align: center;
+            background: radial-gradient(circle at center, #0f0f0f 0%, #000 100%);
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        header span { color: var(--accent); }
+
+        .container { max-width: 850px; margin: 0 auto; padding: 40px 20px; }
+
+        .step-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            transition: 0.3s ease;
+            position: relative;
+        }
+
+        .step-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent-dim);
+        }
+
+        .step-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-num {
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            opacity: 0.5;
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px dashed #333;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-size: 0.9rem;
+            display: block;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            position: absolute; right: 10px; top: 10px;
+            background: var(--accent); border: none; padding: 4px 8px;
+            font-size: 0.7rem; font-weight: bold; border-radius: 4px; cursor: pointer;
+            color: #000;
+        }
+
+        .copy-btn:active { transform: scale(0.95); }
+
+        .img-box {
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .img-box img {
+            width: 100%;
+            display: block;
+            filter: grayscale(0.6) contrast(1.1);
+            transition: 0.4s;
+            cursor: zoom-in;
+        }
+
+        .img-box img:hover {
+            filter: grayscale(0);
+            transform: scale(1.02);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
+            cursor: zoom-out;
+        }
+        .modal.active { display: flex; }
+        .modal img { 
+            max-width: 95%; 
+            max-height: 90%; 
+            border: 2px solid var(--accent);
+            animation: emerge 0.3s ease-out;
+        }
+
+        @keyframes emerge {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .step-card { padding: 20px; }
+            .copy-btn { padding: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="logo">> ZYMLINK_ENGINEER_MODE</a>
+        <div style="font-size: 0.8rem; color: var(--accent)">
+            <i class="fas fa-circle" style="font-size: 0.6rem; vertical-align: middle;"></i> STATUS: ACTIVE
+        </div>
+    </nav>
+
+    <header>
+        <h1>ZYMLINK <span>EPON</span> CONFIG</h1>
+        <p style="color: var(--text-dim)">Initialization protocol for ZYMLINK series optical line terminals</p>
+    </header>
+
+    <div class="container">
+        <div class="step-card">
+            <h2><span class="step-num">01</span> Authentication</h2>
+            <p style="color: var(--text-dim); margin-bottom: 10px;">Gunakan kredensial default untuk masuk ke shell sistem.</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode('c1')">COPY</button>
+                <code id="c1">IP: 192.168.100.100 | Admin: root | Pass: 123456</code>
+            </div>
+            <div class="img-box">
+                <img src="img/1.png" alt="Auth Shell">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-num">02</span> VLAN Segmentation</h2>
+            <p style="color: var(--text-dim);">Tentukan pemisahan traffik pada menu VLAN Planning.</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode('c2')">COPY</button>
+                <code id="c2">Menu > Configuration > VLAN Planning</code>
+            </div>
+            <div class="img-box">
+                <img src="img/3.png" alt="VLAN Setup">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-num">03</span> Remote Access</h2>
+            <p style="color: var(--text-dim);">Aktifkan VLAN Remote via jalur Uplink untuk monitoring luar jaringan.</p>
+            <div class="img-box">
+                <img src="img/5.png" alt="Remote Config">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-num">04</span> Commit Changes</h2>
+            <p style="color: var(--text-dim);">Lakukan penyimpanan konfigurasi ke dalam NVRAM perangkat.</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode('c4')">COPY</button>
+                <code id="c4">System -> Save Configuration</code>
+            </div>
+            <div class="img-box">
+                <img src="img/6.png" alt="Save Changes">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 VNETMEDIA_LAB. SECURE_PROTOCOL_ENABLED.
+    </footer>
+
+    <div class="modal" id="zoomModal">
+        <img src="" alt="Zoomed View">
+    </div>
+
+    <script>
+        // Zoom Logic
+        const modal = document.getElementById('zoomModal');
+        const modalImg = modal.querySelector('img');
+        
+        document.querySelectorAll('.step-card img').forEach(img => {
+            img.onclick = () => {
+                modal.classList.add('active');
+                modalImg.src = img.src;
+            }
+        });
+        
+        modal.onclick = () => modal.classList.remove('active');
+
+        // Copy Clipboard Function
+        function copyCode(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerText;
+                btn.innerText = 'COPIED!';
+                btn.style.backgroundColor = '#ffffff';
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = 'var(--accent)';
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>

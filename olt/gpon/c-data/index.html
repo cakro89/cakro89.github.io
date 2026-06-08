@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>OLT CONFIG | MIDNIGHT EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #000000;
+            --card: #0a0a0a;
+            --accent: #00ff66; /* Hijau Cyber */
+            --accent-dim: rgba(0, 255, 102, 0.15);
+            --border: #1a1a1a;
+            --text: #ffffff;
+            --text-dim: #888888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Scanline Effect ala Monitor Jadul */
+        body::before {
+            content: " ";
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 9999;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        nav {
+            background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 5%;
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: bold; }
+
+        header {
+            padding: 60px 5% 20px;
+            text-align: center;
+            background: radial-gradient(circle at center, #0f0f0f 0%, #000 100%);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        header span { color: var(--accent); }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+
+        .step-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 40px;
+            transition: 0.3s ease;
+            position: relative;
+        }
+
+        .step-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px var(--accent-dim);
+        }
+
+        .step-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-num {
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            opacity: 0.5;
+        }
+
+        .code-block {
+            background: #000;
+            border: 1px dashed #333;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            position: absolute; right: 10px; top: 10px;
+            background: var(--accent); border: none; padding: 4px 8px;
+            font-size: 0.7rem; font-weight: bold; border-radius: 4px; cursor: pointer;
+        }
+
+        .img-box {
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .img-box img {
+            width: 100%;
+            display: block;
+            filter: grayscale(0.5) contrast(1.2);
+            transition: 0.4s;
+            cursor: zoom-in;
+        }
+
+        .img-box img:hover {
+            filter: grayscale(0);
+            transform: scale(1.02);
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            display: none; justify-content: center; align-items: center; z-index: 2000;
+        }
+        .modal.active { display: flex; }
+        .modal img { max-width: 95%; max-height: 90%; border: 2px solid var(--accent); }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .step-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">> SYSTEM_CONFIG_OLT</div>
+        <div style="font-size: 0.8rem; color: var(--accent)">STATUS: ONLINE</div>
+    </nav>
+
+    <header>
+        <h1>C-DATA <span>VLAN</span> CONFIG</h1>
+        <p style="color: var(--text-dim)">Protokol konfigurasi perangkat OLT C-Data Series</p>
+    </header>
+
+    <div class="container">
+        <div class="step-card">
+            <h2><span class="step-num">01</span> Authentication</h2>
+            <p style="color: var(--text-dim); margin-bottom: 10px;">Masuk ke sistem menggunakan terminal atau web interface.</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode('c1')">COPY</button>
+                <code id="c1">IP: 192.168.100.100 | User: root | Pass: admin</code>
+            </div>
+            <div class="img-box">
+                <img src="img/1.png" alt="Step 1">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-num">02</span> VLAN Environment</h2>
+            <p style="color: var(--text-dim);">Definisikan VLAN ID pada menu VLAN Planning.</p>
+            <div class="code-block">
+                <button class="copy-btn" onclick="copyCode('c2')">COPY</button>
+                <code id="c2">VLAN_LIST: 10, 20, 30, 100</code>
+            </div>
+            <div class="img-box">
+                <img src="img/4.png" alt="Step 2">
+            </div>
+        </div>
+
+        <div class="step-card">
+            <h2><span class="step-num">03</span> Uplink Interface</h2>
+            <p style="color: var(--text-dim);">Setting Trunk/Hybrid pada port GE atau XGE.</p>
+            <div class="img-box">
+                <img src="img/7.png" alt="Step 3">
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 NETWORK_ENGINEER_LAB. NO_INDEX_ENABLED.
+    </footer>
+
+    <div class="modal" id="zoomModal">
+        <img src="" alt="Zoomed">
+    </div>
+
+    <script>
+        // Zoom Image
+        const modal = document.getElementById('zoomModal');
+        const modalImg = modal.querySelector('img');
+        document.querySelectorAll('.step-card img').forEach(img => {
+            img.onclick = () => {
+                modal.classList.add('active');
+                modalImg.src = img.src;
+            }
+        });
+        modal.onclick = () => modal.classList.remove('active');
+
+        // Copy Function
+        function copyCode(id) {
+            const text = document.getElementById(id).innerText;
+            navigator.clipboard.writeText(text);
+            alert('Command Copied!');
+        }
+    </script>
+</body>
+</html>
