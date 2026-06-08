@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial Git Push ke GitHub</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f4f6f9; padding: 20px; color: #333; line-height: 1.6; }
+        .card { background: white; max-width: 800px; margin: auto; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #dc3545; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .step { margin-bottom: 25px; }
+        .step-title { font-weight: 700; margin-bottom: 8px; display: block; color: #212529; }
+        
+        .code-box { 
+            background: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; 
+            font-family: 'Courier New', monospace; font-size: 14px; cursor: pointer;
+            border-left: 5px solid #dc3545; position: relative;
+        }
+        .code-box:hover { background: #3e3d32; }
+        .hint { font-size: 11px; color: #888; margin-top: 5px; font-style: italic; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Tutorial Update Proyek ke GitHub</h2>
+        <p>Gunakan urutan perintah di bawah ini setiap kali Anda selesai mengedit file di folder proyek Anda.</p>
+
+        <div class="step">
+            <span class="step-title">1. Tambahkan semua file yang berubah</span>
+            <div class="code-box" onclick="copyCode(this)">git add .</div>
+            <div class="hint">Klik kode untuk salin</div>
+        </div>
+
+        <div class="step">
+            <span class="step-title">2. Berikan pesan perubahan (Commit)</span>
+            <div class="code-box" onclick="copyCode(this)">git commit -m "update fitur terbaru"</div>
+            <div class="hint">Klik kode untuk salin</div>
+        </div>
+
+        <div class="step">
+            <span class="step-title">3. Kirim ke GitHub (Push)</span>
+            <div class="code-box" onclick="copyCode(this)">git push -u origin main</div>
+            <div class="hint">Klik kode untuk salin</div>
+        </div>
+
+        <div style="background: #e9ecef; padding: 15px; border-radius: 6px; margin-top: 20px;">
+            <strong>Tips:</strong> Jika Anda malas mengetik berulang kali, buatlah file bernama <code>push.bat</code> di folder proyek Anda, lalu isi dengan kode berikut:
+            <pre style="font-size: 12px;">git add .
+git commit -m "update"
+git push -u origin main</pre>
+        </div>
+    </div>
+
+    <script>
+        function copyCode(element) {
+            const text = element.innerText;
+            navigator.clipboard.writeText(text);
+            alert("Perintah disalin: " + text);
+        }
+    </script>
+</body>
+</html>
