@@ -210,8 +210,25 @@
             font-weight: 500;
             transition: all 0.2s ease;
         }
+          .card {
+            width: 100%;
+            max-width: 780px; /* Membatasi lebar maksimal agar tetap terlihat kecil/compact */
+            border-radius: 21px;
+            box-shadow: 0 4px 15px #088a0e;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+          .description {
+            font-size: 10px;
+            line-height: 1.4;
+            color: #ffffff;
+        }
 
-
+        .description strong {
+            color: #1400ff;
+        }
             
             .button-grid {
                 grid-template-columns: fr; /* Tombol jadi 1 kolom berderet ke bawah di HP */
