@@ -8,18 +8,18 @@
     <link rel="shortcut icon" type="image/png" href="img/favicon.png?v=3">
     <link rel="apple-touch-icon" href="img/favicon.png?v=3">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link class="embed" rel="stylesheet" href="style.css">
+    <link class="embed" rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="video-container">
         <video autoplay muted loop id="video-background">
-            <source src="https://static.videezy.com/system/resources/previews/000/036/051/original/Night_city_SSSS.mp4" type="video/mp4">
+            <source src="Night_city_SSSS.mp4" type="video/mp4">
         </video>
         <div class="video-overlay"></div>
     </div>
 
     
-    <div class="card">
+     <div class="card">
         <div class="main-content">
             
             <div class="left-section">
@@ -35,14 +35,11 @@
                 </p>
 
                 <div class="button-grid">
-                    <a href="pcc.html" class="btn-link">&gt;_ Loadbalance PCC</a>
-                    <a href="ninja.html" class="btn-link">&gt;_ Mikrotik Ninja</a>
-                    <a href="telegram-ppp.html" class="btn-link">&gt;_ Telegram ppp</a>
-                    <a href="pisahtrafik.html" class="btn-link">&gt;_ Pisah Trafik</a>
-                    <a href="#" class="btn-link">&gt;_ Template Login Page</a>
-                    <a href="#" class="btn-link">&gt;_ Template Voucher</a>
-                    <a href="mik.html" class="btn-link">&gt;_ Setting Mik</a>
-                    <a href="olt" class="btn-link">&gt;_ Setting Olt</a>
+                    <a href="mikrotik" class="btn-link">&gt;_ Mikrotik Tools</a>
+                    <a href="olt" class="btn-link">&gt;_ Olt</a>
+                    <a href="telegram-ppp.html" class="btn-link">&gt;_ Telegram Tools</a>
+                    <a href="https://vnetmedia.my.id" class="btn-link">&gt;_ Apps </a>
+                   
                 </div>
             </div>
 
@@ -60,75 +57,6 @@
         </div>
     </div>
 
-    <script>
-        // 1. Fungsi untuk Greeting berdasarkan waktu (dari script sebelumnya)
-        function setGreeting() {
-            const now = new Date();
-            const hours = now.getHours();
-            let greeting = "";
-
-            if (hours >= 4 && hours < 11) {
-                greeting = "Selamat Pagi, Bos WiFi! ☕";
-            } else if (hours >= 11 && hours < 15) {
-                greeting = "Selamat Siang, Bos WiFi! ☀️";
-            } else if (hours >= 15 && hours < 18) {
-                greeting = "Selamat Sore, Bos WiFi! 🌅";
-            } else {
-                greeting = "Selamat Malam, Bos WiFi! 🌙";
-            }
-
-            document.getElementById("greeting-text").innerHTML = `
-                <strong>${greeting}</strong><br><br>
-                Situs ini didedikasikan khusus untuk membantu para <strong>pengusaha WiFi dan RT/RW Net</strong> dalam mengelola bisnisnya. Di sini, Anda akan menemukan dokumentasi, tools, skrip konfigurasi, serta panduan praktis seputar jaringan komputer dan manajemen internet. Semoga bermanfaat untuk kelancaran dan kemajuan usaha Anda!
-            `;
-        }
-
-        // 2. Fungsi untuk mengubah kata-kata (Quote) secara acak
-        function setRandomQuote() {
-            // Daftar kata-kata pilihan (bisa Anda tambah atau ubah sendiri isinya)
-            const quotes = [
-                {
-                    text: "Allah yang pertama, keluarga yang kedua, dan pekerjaan yang ketiga. Jangan sampai terbalik.",
-                    author: "Kambing"
-                },
-                {
-                    text: "Sebaik-baiknya jaringan adalah jaringan yang berkah, lancar jalurnya, dan halal rezekinya.",
-                    author: "Quote Hari Ini"
-                },
-                {
-                    text: "Gaji boleh UMR, tapi income dari voucheran WiFi harus loss tanpa limit!",
-                    author: "Pejuang RT/RW Net"
-                },
-                {
-                    text: "Jangan cuma sibuk setting Mangle dan Queue Tree, ingat waktu untuk keluarga dan ibadah.",
-                    author: "Pengingat Diri"
-                },
-                {
-                    text: "Koneksi internet boleh pakai failover, tapi urusan masa depan harus terencana dengan pasti.",
-                    author: "Kambing"
-                },
-                {
-                    text: "Pelanggan komplain internet lambat itu biasa, yang penting silaturahmi dengan tetangga tetap lancar.",
-                    author: "Kandang Kambing"
-                }
-            ];
-
-            // Memilih satu quote secara acak
-            const randomIndex = Math.floor(Math.random() * quotes.length);
-            const selectedQuote = quotes[randomIndex];
-
-            // Memasang teks quote baru ke dalam HTML
-            document.getElementById("random-quote").innerHTML = `
-                "${selectedQuote.text}" — <em>${selectedQuote.author}</em>
-            `;
-        }
-
-        // Jalankan kedua fungsi saat halaman selesai dimuat
-        window.onload = function() {
-            setGreeting();
-            setRandomQuote();
-        };
-    </script>
-
+    <script src="js/greeting.js"></script>
 </body>
 </html>
