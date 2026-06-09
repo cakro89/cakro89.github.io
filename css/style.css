@@ -1,4 +1,7 @@
-/* --- VIDEO BACKGROUND FIX --- */
+ .breadcrumb { font-size: 0.9rem; margin-bottom: 15px; color: #888; }
+        .breadcrumb a { color: #3498db; text-decoration: none; }
+        .page-title { font-size: 1.8rem; font-weight: 700; color: #fff0f0; margin-bottom: 10px; }
+        .page-desc { color: #7dad00; margin-bottom: 3px; line-height: 1.6; font-size: 13px; }
 .video-container {
     position: fixed;
     top: 0;
@@ -199,8 +202,19 @@
                 gap: 20px;
             }
 
+            .btn-link {
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+
+            
             .button-grid {
-                grid-template-columns: 1fr; /* Tombol jadi 1 kolom berderet ke bawah di HP */
+                grid-template-columns: fr; /* Tombol jadi 1 kolom berderet ke bawah di HP */
             }
 
             .footer-nav {
