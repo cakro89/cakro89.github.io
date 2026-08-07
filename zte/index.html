@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page { size: A4; margin: 20mm; background-color: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f4f7f6; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h2 { color: #2980b9; margin-top: 30px; border-left: 4px solid #3498db; padding-left: 10px; }
+        pre { background: #2d3436; color: #dfe6e9; padding: 15px; border-radius: 5px; overflow-x: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 14px; }
+        code { color: #f39c12; }
+        .note { background: #e1f5fe; padding: 10px; border-left: 4px solid #03a9f4; margin: 10px 0; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cheat Sheet Perintah ZTE OLT C320</h1>
+        
+        <h2>1. Cek Detail Konfigurasi Interface</h2>
+        <pre>show run interface gpon-onu_1/2/5:4</pre>
+
+        <h2>2. Cek Status Interface ONT</h2>
+        <pre>show gpon onu state gpon-olt_1/2/5 4</pre>
+
+        <h2>3. Cek Nilai Optik (Power)</h2>
+        <pre>show pon power attenuation gpon-onu_1/2/5:4</pre>
+
+        <h2>4. Cek Utilisasi Bandwidth Real Time</h2>
+        <pre>show interface gpon-onu_1/2/5:4</pre>
+
+        <h2>5. Cek Uptime & History ONT</h2>
+        <pre>show gpon onu detail-info gpon-onu_1/2/5:5</pre>
+
+        <h2>6. Cek MAC Address Terkoneksi</h2>
+        <pre>show mac gpon onu gpon-onu_1/2/5:5</pre>
+
+        <h2>7. Cek Versi Firmware ONT</h2>
+        <pre>show gpon remote-onu equip gpon-onu_1/2/5:5</pre>
+
+        <h2>8. Cek Status Port Ethernet ONT</h2>
+        <pre>show gpon remote-onu interface eth gpon-onu_1/2/5:5</pre>
+
+        <h2>9. Reboot/Restart ONT</h2>
+        <pre>config t
+pon-onu-mng gpon-onu_1/2/5:5
+reboot</pre>
+
+        <h2>10. Lock/Shutdown Port Ethernet</h2>
+        <pre>config t
+pon-onu-mng gpon-onu_1/2/5:5
+interface eth eth_0/1 state lock</pre>
+
+        <h2>11. Manajemen Hardware OLT (Info Board, Suhu, CPU)</h2>
+        <pre>show card
+show temperature
+show processor
+show card slotno 12</pre>
+        
+        <div class="note">Tips: Gunakan tanda tanya <code>?</code> di akhir perintah untuk melihat opsi bantuan di terminal OLT.</div>
+    </div>
+</body>
+</html>
