@@ -1,62 +1,156 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kandang Kambing</title>
-    <link rel="icon" type="image/png" sizes="192x192" href="img/favicon.png?v=3">
-    <link rel="shortcut icon" type="image/png" href="img/favicon.png?v=3">
-    <link rel="apple-touch-icon" href="img/favicon.png?v=3">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link class="embed" rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MikroTik Script Generator- Vnet media</title>
+  <link rel="icon" type="image/png" href="img/favicon.png?v=2">
+  <link rel="shortcut icon" href="img/favicon.png?v=2">
+  <link rel="apple-touch-icon" href="img/favicon.png?v=2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css?v=1">
 </head>
 <body>
-    <div class="video-container">
-        <video autoplay muted loop id="video-background">
-            <source src="Night_city_SSSS.mp4" type="video/mp4">
-        </video>
-        <div class="video-overlay"></div>
+
+  <div class="container">
+    <div class="header-banner">
+      <div class="header-title">⚡MikroTik NETWORK <span>TOOLS</span></div>
+      <div class="header-subtitle">easy config with generator tools. made for MikroTik RouterOS</div>
     </div>
 
+    <!-- Live Search -->
+    <div class="search-box">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search Tools...">
+      <button class="btn-clear" onclick="clearSearch()">Clear</button>
+    </div>
+
+    <div class="section-title">☰ FREE FAST MIKROTIK SCRIPT GENERATOR</div>
     
-     <div class="card">
-        <div class="main-content">
-            
-            <div class="left-section">
-                <div class="logo-title">Kandang<span>Kambing</span></div>
-                <div class="logo-subtitle">"Gudang <span>Teknologi Informasi</span> Khusus"</div>
-                
-                <img class="illustration" src="img/kambing.png" alt="Ilustrasi Developer">
-            </div>
+    <!-- DAFTAR LENGKAP 60+ TOOLS -->
+    <div class="tools-grid" id="toolsContainer">
+      <button class="tool-btn" onclick="openModal('addAdminUser')">
+        <span><i class="fa-solid fa-user-gear"></i> Add Admin User</span>
+        <span class="tag-free">free</span>
+      </button>
 
-            <div class="right-section">
-                <p class="description" id="greeting-text">
-                    Selamat Datang! Platform ini didedikasikan khusus untuk membantu para <strong>pengusaha WiFi dan RT/RW Net</strong> dalam mengelola bisnisnya. Di sini, Anda akan menemukan dokumentasi, tools, skrip konfigurasi, serta panduan praktis seputar jaringan komputer dan manajemen internet. Semoga bermanfaat untuk kemajuan usaha Anda!
-                </p>
+      <button class="tool-btn" onclick="openModal('addIpAddress')">
+        <span><i class="fa-solid fa-network-wired"></i> Add IP Address</span>
+        <span class="tag-free">free</span>
+      </button>
 
-                <div class="button-grid">
-                    <a href="mikrotik" class="btn-link">&gt;_ Mikrotik Tools</a>
-                    <a href="olt" class="btn-link">&gt;_ Olt</a>
-                    <a href="telegram-ppp.html" class="btn-link">&gt;_ Telegram Tools</a>
-                    <a href="https://vnetmedia.my.id" class="btn-link">&gt;_ Apps </a>
-                   
-                </div>
-            </div>
+      <button class="tool-btn" onclick="openModal('addIpPool')">
+        <span><i class="fa-solid fa-layer-group"></i> Add IP Pool</span>
+        <span class="tag-free">free</span>
+      </button>
 
-        </div>
+      <button class="tool-btn" onclick="openModal('cekmode')">
+        <span><i class="fa-solid fa-microchip"></i> Cek Mode Mikrotik</span>
+        <span class="tag-free">free</span>
+      </button>
 
-        <div class="quote-box" id="random-quote">
-            "Allah yang pertama, keluarga yang kedua, dan pekerjaan yang ketiga. Jangan sampai terbalik." — <em>Anonim</em>
-        </div>
+      <button class="tool-btn" onclick="openModal('updatemode')">
+        <span><i class="fa-solid fa-sliders"></i> Update Advance Mikrotik</span>
+        <span class="tag-free">free</span>
+      </button>
 
-        <div class="footer-nav">
-            <a href="#" class="btn-nav">🏠 Beranda</a>
-            <a href="#" class="btn-nav">🔄 Kembali</a>
-            <a href="#" class="btn-nav">⚙️ Update</a>
-            <a href="#" class="btn-nav">📅 Jadwal Sholat</a>
-        </div>
+      <button class="tool-btn" onclick="openModal('romon')">
+        <span><i class="fa-solid fa-diagram-project"></i> Tool Romon</span>
+        <span class="tag-free">free</span>
+      </button>
+
+      <button class="tool-btn" onclick="openModal('dhcpclient')">
+        <span><i class="fa-solid fa-diagram-project"></i> Dhcp-Client</span>
+        <span class="tag-free">free</span>
+      </button>
+
+      <button class="tool-btn" onclick="openModal('resetmik')">
+        <span><i class="fa-solid fa-diagram-project"></i> Reset</span>
+        <span class="tag-free">free</span>
+      </button>
     </div>
 
-    <script src="js/greeting.js"></script>
+    <div class="section-title">☰ TOOL MIKROTIK SCRIPT GENERATOR</div>
+    
+    <!-- ID diubah ke toolsContainer2 agar tidak bentrok -->
+    <div class="tools-grid" id="toolsContainer2">
+      <!-- Tag <a href> ditutup dengan </a> yang benar -->
+      <a href="ninja.html" class="tool-btn">
+        <span><i class="fa-solid fa-user-ninja"></i> Mikrotik Ninja</span>
+        <span class="tag-free">free</span>
+      </a>
+
+     <a href="pcc.html" class="tool-btn">
+        <span><i class="fa-solid fa-scale-balanced"></i> Load Balance PCC</span>
+        <span class="tag-free">free</span>
+      </a>
+
+      <a href="rcf.html" class="tool-btn">
+        <span><i class="fa-solid fa-shield-halved"></i> Firewall RCF</span>
+        <span class="tag-free">free</span>
+      </a>
+
+      <button class="tool-btn" onclick="openModal('antiDdos')">
+        <span><i class="fa-solid fa-shield-cat"></i> Firewall Security 2</span>
+        <span class="tag-free">free</span>
+      </button>
+
+      <a href="ppp.html" class="tool-btn">
+        <span><i class="fa-brands fa-telegram"></i> Telegram PPPOE</span>
+        <span class="tag-free">free</span>
+      </a>
+
+      <button class="tool-btn" onclick="openModal('antiDdos')">
+        <span><i class="fa-solid fa-wand-magic-sparkles"></i> Setup Awal</span>
+        <span class="tag-free">free</span>
+      </button>
+    </div>
+
+    <!-- Disclaimer -->
+    <div class="disclaimer-card">
+      <span class="disclaimer-tag">DISCLAIMER</span>
+      We are not responsible for any error, failure, damage or your router being locked due to intentional or accidental factors. Our Tool works independently, all problems that occur on your router are your own responsibility.
+    </div>
+
+    <div class="footer">
+      <div>© Copyright 2026 <strong>NETWORK-TOOLS.COM</strong> - All Rights Reserved.</div>
+      <div class="ip-info">
+        <span>IP Public: <strong id="userPublicIp">Loading...</strong></span> | 
+        <span>IP Local: <strong id="userLocalIp">Loading...</strong></span>
+      </div>
+      <div>hits <span class="hit-counter">2,923,538</span></div>
+    </div>
+  </div>
+
+  <!-- POPUP MODAL REUSABLE -->
+  <div class="modal-overlay" id="dynamicModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-title" id="modalTitle">Tool Title</span>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <!-- View 1: Form Input -->
+      <div id="viewForm">
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+          <button class="btn-generate" onclick="generateScript()">GENERATE</button>
+        </div>
+      </div>
+
+      <!-- View 2: Script Output Result -->
+      <div id="viewResult" style="display: none;">
+        <div class="modal-body">
+          <div class="result-box" id="scriptCode"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-generate" onclick="copyScript()">Copy Script</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script src="logic.js"></script>
+
 </body>
 </html>

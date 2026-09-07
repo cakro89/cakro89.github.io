@@ -1,0 +1,552 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Mendaftarkan kustom variabel angle untuk animasi border berputar */
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:root {
+  --primary: #d19a66; /* Warna karamel */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  /* Latar Belakang Gelap dengan Pola Grid / Kotak-Kotak */
+  background-color: #000000;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  
+  color: #f2e9e1;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Presisi di tengah layar secara vertikal */
+  min-height: 100vh;
+  padding: 15px;
+}
+
+/* Kontainer Utama Ringkas & Pas di Tengah */
+.container {
+  position: relative;
+  width: 80%;
+  max-width: 650px; /* Lebar lebih kompak */
+  border-radius: 16px;
+  padding: 16px 20px; /* Padding dipangkas agar tinggi berkurang */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+
+  /* Background Image & Overlay Gelap */
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.87)),
+    url('https://www.suarasurabaya.net/wp-content/uploads/2020/05/internet.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Layer Border Muter untuk Container */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 20px;
+  padding: 4px;
+  background: conic-gradient(from var(--angle), #fffefed6, #2f00ff, var(--primary), #2dff00d6, #ff0000d6);
+  
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          
+  animation: rotate-border 4s linear infinite;
+  z-index: -1;
+}
+
+/* Keyframe Rotasi Border */
+@keyframes rotate-border {
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Header Banner Card Base */
+.header-banner {
+  position: relative;
+  border-radius: 12px;
+  padding: 13px 18px; /* Padding dipangkas agar hemat tinggi */
+  text-align: center;
+  background: #a7784f29;
+  margin-bottom: 11px; /* Margin diperkecil agar mepet */
+  z-index: 1;
+}
+
+/* Layer Border Berputar untuk Header Banner */
+.header-banner::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  padding: 2px;
+  background: conic-gradient(from var(--angle), #ff0909d6, #1b02a9d6, var(--primary), #2dff00d6, #ff0909d6);
+  
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          
+  animation: rotate-border 4s linear infinite;
+  z-index: -1;
+}
+
+.header-title {
+  color: #f2e9e1;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.header-title span {
+  color: #d19a66;
+}
+
+.header-subtitle {
+  background: #27211c;
+  color: #c4b5a5;
+  border: 1px solid #483d33;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 6px;
+  margin-top: 6px;
+  display: inline-block;
+}
+
+/* Search Bar Input */
+.search-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px; /* Margin diperkecil agar rapat */
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #483d33;
+  border-radius: 10px;
+  background-color: #1e1915;
+  color: #f2e9e1;
+  font-size: 13.5px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: #8c7b6c;
+}
+
+.search-input:focus {
+  border-color: #d19a66;
+  box-shadow: 0 0 0 3px rgba(209, 154, 102, 0.15);
+}
+
+.btn-clear {
+  background: #b07246;
+  color: #ffffff;
+  border: none;
+  padding: 0 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-clear:hover {
+  background-color: #965f38;
+}
+
+/* Judul Sub-Seksi */
+.section-title {
+  color: #d19a66;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Grid Kartu Menu Tools */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px; /* Jarak antarkartu dipersingkat */
+  margin-bottom: 14px;
+}
+
+/* Tool Button Base */
+.tool-btn {
+  position: relative;
+  background: #302821;
+  color: #e6dad0;
+  padding: 4px 13px; /* Padding tombol disusutkan */
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  text-decoration: none !important; 
+  outline: none !important;         
+  display: flex;                    
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+
+
+/* Layer Border Berputar untuk Tool Button */
+.tool-btn::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 12px;
+  padding: 2px;
+  background: conic-gradient(from var(--angle), #ff0909d6, #1b02a9d6, var(--primary), #2dff00d6, #ff0909d6);
+  
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          
+  animation: rotate-border 4s linear infinite;
+  z-index: -1;
+}
+
+.tool-btn:hover {
+  background: #1e05c1b3;
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+.tag-free {
+  font-size: 9.5px;
+  background: #1e1915;
+  color: #c4b5a5;
+  padding: 2px 7px;
+  border-radius: 20px;
+  font-weight: 600;
+  border: 1px solid #43382e;
+  position: relative; /* Memastikan tag berada di atas layer border */
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+/* Biar otomatis ikut berubah saat tombol utama di-hover (Opsional) */
+.tool-btn:hover .tag-free {
+  background: #ff0000;
+  color: #ffffff;
+  border-color: #4a4242;
+}
+
+/* Disclaimer Card */
+.disclaimer-card {
+  border: 1px dashed #483d33;
+  background: #19120cb8;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 9.5px;
+  color: #b5a494;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.disclaimer-tag {
+  background: #b07246;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 8.5px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: #8c7b6c;
+  border-top: 1px solid #3d332a;
+  padding-top: 12px;
+}
+
+.hit-counter {
+  background: #1e1915;
+  color: #c4b5a5;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid #3d332a;
+}
+
+/* Modal Popup Overlay */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 8, 7, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+/* Modal Popup Card Base */
+.modal-card {
+  position: relative;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  animation: modalPop 0.2s ease-out;
+  z-index: 1;
+  
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.87)),
+    url('https://static.vecteezy.com/system/resources/previews/026/423/787/large_2x/abstract-technology-background-with-circuit-board-and-blue-lights-digital-communication-line-concept-graphic-hardware-computer-tech-integrated-energy-design-information-internet-generative-ai-photo.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+/* Layer Border Muter untuk Container */
+.modal-card:before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 20px;
+  padding: 4px;
+  background: conic-gradient(from var(--angle), #fffefed6, #2f00ff, var(--primary), #2dff00d6, #ff0000d6);
+  
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          
+  animation: rotate-border 4s linear infinite;
+  z-index: -1;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: #211c18;
+  border-bottom: 1px solid #3d332a;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.modal-title {
+  color: #f2e9e1;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: #382e26;
+  color: #c4b5a5;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.modal-close:hover {
+  background: #b07246;
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 16px 18px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  color: #c4b5a5;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.form-input, .form-select {
+  width: 100%;
+  background: #120d09;
+  border: 1px solid #483d33;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #f2e9e1;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.form-input:focus, .form-select:focus {
+  border-color: #d19a66;
+}
+
+.modal-footer {
+  padding: 12px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid #3d332a;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #8c7b6c;
+  border-top: 1px solid #3d332a;
+  padding-top: 12px;
+  flex-wrap: wrap; /* Mencegah patah di layar HP */
+  gap: 8px;
+}
+
+.ip-info {
+  background: #1e1915;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid #3d332a;
+  color: #c4b5a5;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.ip-info strong {
+  color: #d19a66;
+}
+.btn-generate {
+  background: #b07246;
+  color: #ffffff;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-generate:hover {
+  background: #965f38;
+}
+
+.btn-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #4a7c59;
+  color: #ffffff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-copy:hover {
+  background: #3b6346;
+}
+
+.btn-secondary {
+  background: #382e26;
+  color: #c4b5a5;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #483d33;
+  color: #ffffff;
+}
+
+/* Terminal Box / Output Script */
+.result-box {
+  background: #14110e;
+  border: 1px solid #382e26;
+  border-radius: 8px;
+  padding: 12px;
+  color: #d19a66;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+@keyframes modalPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+  .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Kontainer Utama Ringkas & Pas di Tengah */
+.container {
+  width: 100%;
+  
+}
+
+  /* Modal Popup Card Base */
+.modal-card {
+  background: #2b241e;
+  border-radius: 16px;
+  width: 85%;
+  
+  
+}

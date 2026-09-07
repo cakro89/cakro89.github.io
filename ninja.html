@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikrotik Ninja - Hide Routerboard Info</title>
+      <link rel="icon" type="image/png" href="img/favicon.png?v=2">
+  <link rel="shortcut icon" href="img/favicon.png?v=2">
+  <link rel="apple-touch-icon" href="img/favicon.png?v=2">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="ninja.css">
+</head>
+<body>
+
+     <div class="container">
+    <!-- Header Banner dengan Tombol Panah Kiri Home -->
+    <div class="header-banner">
+      <a href="index.html" class="btn-secondary" title="Kembali ke Home" style="position: absolute; top: 12px; left: 14px; text-decoration: none; padding: 6px 10px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+    
+            <h1 class="header-title">MIKROTIK <span>NINJA</span></h1>
+            <div class="header-subtitle">Hide Routerboard Info From ISP / WAN Scanning</div>
+        </div>
+
+        <!-- Section Input Param -->
+        <div class="section-title">⚡ PARAMETER HIDE ROUTER</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>INTERFACE WAN</label>
+                <input type="text" id="interface-wan" class="form-input" list="ether-list" value="ether1">
+                <datalist id="ether-list">
+                    <option value="ether1"><option value="ether2"><option value="ether3">
+                    <option value="ether4"><option value="ether5">
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label>UBAH IDENTITY</label>
+                <div class="input-with-btn">
+                    <input type="text" id="new-identity" class="form-input" value="THINKPAD">
+                    <button class="btn-random" onclick="generateRandomIdentity()">🎲</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>UBAH MAC ADDRESS</label>
+                <div class="input-with-btn">
+                    <input type="text" id="new-mac" class="form-input" value="DE:DB:78:E7:1D:30">
+                    <button class="btn-random" onclick="generateRandomMac()">🎲</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Checkboxes -->
+        <div class="section-title">🛡️ PROTEKSI SCANNING INTERNET (WAN)</div>
+        <div class="checkbox-grid">
+            <label class="checkbox-item"><input type="checkbox" id="chk-winbox" checked> Winbox Scan</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-neighbor" checked> Neighbor</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-mac" checked> Mac Server</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-traceroute" checked> Traceroute</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-romon" checked> RoMON</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-dns" checked> Open DNS</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-proxy" checked> Open PROXY</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-btest" checked> BTest</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-snmp" checked> SNMP</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-dude" checked> The Dude</label>
+            <label class="checkbox-item"><input type="checkbox" id="chk-cloud" checked> IP Cloud</label>
+        </div>
+
+        <!-- Tombol Utama Generate -->
+        <div style="margin-bottom: 14px;">
+            <button class="btn-action btn-generate" onclick="generateNinjaScript()">⚙️ Generate Script Ninja</button>
+        </div>
+
+        <!-- Section Output Result (Hanya Muncul Setelah Klik Generate) -->
+        <div id="output-section" class="output-container">
+            <div class="section-title">📜 HASIL SCRIPT</div>
+            <textarea id="ninja-script" class="result-box" readonly></textarea>
+            
+            <div class="action-buttons">
+                <button class="btn-action btn-copy" onclick="copyToClipboard()">📄 Copy Script</button>
+                <button class="btn-action btn-clear" onclick="clearForm()">🗑️ Reset / Sembunyikan</button>
+            </div>
+        </div>
+
+        <!-- Quote Disclaimer -->
+        <div class="disclaimer-card">
+            <span class="disclaimer-tag">QUOTE</span> "Ada begitu banyak masalah yang kita alami setiap hari, masalah pekerjaan, rumah, hubungan, kehidupan. Tapi kita lupa bahwa masalah terbesar kita adalah permasalahan iman." — <em>Anonim</em>
+        </div>
+
+         <!-- Footer -->
+    <div class="footer">
+      <div>© 2026 <strong>NETWORK-TOOLS.COM</strong></div>
+      <div class="ip-info">
+        <span>IP Public: <strong id="userPublicIp">Loading...</strong></span> | 
+        <span>IP Local: <strong id="userLocalIp">Loading...</strong></span>
+      </div>
+    </div>
+  </div>
+
+    <script>
+        function generateRandomIdentity() {
+            const names = [
+                "ASUS-ROG", "PLAYSTATION", "OPPO-A11", "REDMI", 
+                "HP-PROBOOK", "THINKPAD", "ARCHER", "CATALYST", 
+                "HUAWEI-OLT", "CCR-ROUTER", "SAMSUNG-GALAXY", "IPHONE-PRO", 
+                "MACBOOK-AIR", "XIAOMI-PAD", "REALME-NARZO", "VIVO-Y20"
+            ];
+            document.getElementById("new-identity").value = names[Math.floor(Math.random() * names.length)];
+        }
+
+        function generateRandomMac() {
+            const hexDigits = "0123456789ABCDEF";
+            let macAddress = ""; 
+            for (let i = 0; i < 6; i++) {
+                macAddress += hexDigits.charAt(Math.floor(Math.random() * 16));
+                macAddress += hexDigits.charAt(Math.floor(Math.random() * 16));
+                if (i < 5) macAddress += ":";
+            }
+            document.getElementById("new-mac").value = macAddress;
+        }
+
+        function generateNinjaScript() {
+            const wan = document.getElementById("interface-wan").value;
+            const identity = document.getElementById("new-identity").value;
+            const mac = document.getElementById("new-mac").value;
+            const commentTag = "VNET-NINJA";
+
+            const now = new Date();
+            const dateString = now.toLocaleDateString('id-ID');
+            const timeString = now.toLocaleTimeString('id-ID');
+
+            let script = `##################################################\n`;
+            script += `# MIKROTIK NINJA : HIDE ROUTERBOARD INFO\n`;
+            script += `# Date/Time: ${dateString}, ${timeString}\n`;
+            script += `# Managed By: VNET CORE SYSTEM\n`;
+            script += `##################################################\n\n`;
+            
+            script += `/interface list\nadd name=wan-protect comment="${commentTag}"\n`;
+            script += `/interface list member\nadd interface="${wan}" list=wan-protect comment="${commentTag}"\n\n`;
+
+            script += `/ip firewall filter\n`;
+
+            if(document.getElementById("chk-winbox").checked) {
+                script += `add action=drop chain=input dst-port=21,22,23,80,443,8291,8728,8729 in-interface-list=wan-protect protocol=tcp comment="Block Winbox/Mgmt Scan - ${commentTag}"\n`;
+                script += `add action=drop chain=input dst-port=21,22,23,80,443,8291,8728,8729 in-interface-list=wan-protect protocol=udp comment="Block Winbox/Mgmt Scan - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-neighbor").checked) {
+                script += `add action=drop chain=input dst-port=5678 in-interface-list=wan-protect protocol=tcp comment="Block Neighbor Discovery - ${commentTag}"\n`;
+                script += `add action=drop chain=input dst-port=5678 in-interface-list=wan-protect protocol=udp comment="Block Neighbor Discovery - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-mac").checked) {
+                script += `add action=drop chain=input dst-port=20561 in-interface-list=wan-protect protocol=tcp comment="Block MAC Winbox - ${commentTag}"\n`;
+                script += `add action=drop chain=input dst-port=20561 in-interface-list=wan-protect protocol=udp comment="Block MAC Winbox - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-traceroute").checked) {
+                script += `add action=drop chain=input dst-port=33434-33534 in-interface-list=wan-protect protocol=udp comment="Block Traceroute - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-dns").checked) {
+                script += `add action=drop chain=input dst-port=53 in-interface-list=wan-protect protocol=tcp comment="Block Open DNS - ${commentTag}"\n`;
+                script += `add action=drop chain=input dst-port=53 in-interface-list=wan-protect protocol=udp comment="Block Open DNS - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-proxy").checked) {
+                script += `add action=drop chain=input dst-port=3128,8080 in-interface-list=wan-protect protocol=tcp comment="Block Open Proxy - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-btest").checked) {
+                script += `add action=drop chain=input dst-port=2000 in-interface-list=wan-protect protocol=tcp comment="Block BTest - ${commentTag}"\n`;
+                script += `add action=drop chain=input dst-port=2000 in-interface-list=wan-protect protocol=udp comment="Block BTest - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-snmp").checked) {
+                script += `add action=drop chain=input dst-port=161,162 in-interface-list=wan-protect protocol=tcp comment="Block SNMP - ${commentTag}"\n`;
+                script += `add action=drop chain=input dst-port=161,162 in-interface-list=wan-protect protocol=udp comment="Block SNMP - ${commentTag}"\n`;
+            }
+
+            if(document.getElementById("chk-dude").checked) {
+                script += `add action=drop chain=input dst-port=2210,2211 in-interface-list=wan-protect protocol=tcp comment="Block The Dude - ${commentTag}"\n`;
+            }
+
+            script += `\n/ip neighbor discovery-settings\nset discover-interface-list=!wan-protect\n`;
+            script += `\n/tool mac-server mac-winbox\nset allowed-interface-list=none\n`;
+            script += `/tool mac-server\nset allowed-interface-list=none\n`;
+            script += `/tool mac-server ping\nset enabled=no\n`;
+
+            if(document.getElementById("chk-romon").checked) {
+                script += `\n/tool romon\nset enabled=no\n`;
+            }
+
+            if(document.getElementById("chk-cloud").checked) {
+                script += `\n/ip cloud\nset ddns-enabled=no update-time=no\n`;
+            }
+
+            if(identity || mac) {
+                script += `\n# System Masking\n`;
+                if(identity) script += `/system identity set name="${identity}"\n`;
+                if(mac) script += `/interface ethernet set "${wan}" mac-address="${mac}"\n`;
+            }
+
+            document.getElementById("ninja-script").value = script;
+            
+            // Tampilkan section output hasil & tombol copy
+            const outputSection = document.getElementById("output-section");
+            outputSection.style.display = "block";
+            outputSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearForm() {
+            document.getElementById("ninja-script").value = '';
+            document.getElementById("output-section").style.display = "none";
+        }
+
+        function copyToClipboard() {
+            const copyText = document.getElementById("ninja-script");
+            if(!copyText.value) return;
+            copyText.select();
+            navigator.clipboard.writeText(copyText.value);
+            alert("Skrip Ninja berhasil disalin!");
+        }
+    </script>
+
+
+<script>
+// 1. Ambil IP Public via API
+  fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('userPublicIp').innerText = data.ip;
+    })
+    .catch(() => {
+      document.getElementById('userPublicIp').innerText = 'Tidak terdeteksi';
+    });
+
+  // 2. Ambil IP Local via WebRTC
+  function getLocalIP() {
+    return new Promise((resolve) => {
+      const pc = new RTCPeerConnection({ iceServers: [] });
+      pc.createDataChannel('');
+      pc.createOffer().then(pc.setLocalDescription.bind(pc));
+      
+      pc.onicecandidate = (ice) => {
+        if (!ice || !ice.candidate || !ice.candidate.candidate) return;
+        const ipMatch = ice.candidate.candidate.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}/);
+        if (ipMatch) {
+          resolve(ipMatch[0]);
+          pc.onicecandidate = () => {};
+        }
+      };
+
+      setTimeout(() => resolve('Blocked'), 1500);
+    });
+  }
+
+  getLocalIP().then(ip => {
+    const localIpElement = document.getElementById('userLocalIp');
+    if (ip === 'Blocked') {
+      localIpElement.innerText = 'Hidden (Browser Privacy)';
+      localIpElement.title = 'Browser menyembunyikan IP Lokal demi keamanan (mDNS Privacy).';
+    } else {
+      localIpElement.innerText = ip;
+    }
+  });
+</script>
+
+
+</body>
+</html>

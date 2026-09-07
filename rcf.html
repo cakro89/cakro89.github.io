@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VNET Custom Firewall Generator - MikroTik</title>
+  <link rel="icon" type="image/png" href="img/favicon.png?v=2">
+  <link rel="shortcut icon" href="img/favicon.png?v=2">
+  <link rel="apple-touch-icon" href="img/favicon.png?v=2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header Banner dengan Tombol Home -->
+    <div class="header-banner">
+      <a href="index.html" class="btn-secondary" title="Kembali ke Home" style="position: absolute; top: 12px; left: 14px; text-decoration: none; padding: 6px 10px; font-size: 13px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;">
+        <i class="fa-solid fa-arrow-left"></i>
+      </a>
+
+      <div class="header-title" style="margin-top: 4px;">🛡️ CUSTOM FIREWALL <span>GENERATOR</span></div>
+      <div class="header-subtitle">Generate Skrip Anti-DDoS, Port Publik, Open Proxy & Spammer Email</div>
+    </div>
+
+    <!-- Form Input Generator -->
+    <div class="section-title"><i class="fa-solid fa-sliders"></i> ROUTER & INTERFACE PARAMETERS</div>
+
+    <!-- Layout 2 Kolom Sejajar (PC) / Auto-stack (HP) -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 15px;">
+      
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="pub-ip" style="color: #38edf8; font-weight: bold;">
+          <i class="fa-solid fa-globe"></i> IP PUBLIC / ROUTER:
+        </label>
+        <input type="text" id="pub-ip" class="form-input" style="border: 1px solid #38edf8; background: #121824;" value="104.66.116.157" placeholder="Contoh: 103.86.116.157">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <label for="wan-interface" style="color: #38edf8; font-weight: bold;">
+          <i class="fa-solid fa-network-wired"></i> INTERFACE PUBLIK (WAN):
+        </label>
+        <input type="text" id="wan-interface" class="form-input" style="border: 1px solid #38edf8; background: #121824;" value="ether1" placeholder="Contoh: ether1-WAN">
+      </div>
+
+    </div>
+
+    <!-- Info Note Box -->
+    <div style="border: 1px dashed rgba(255,255,255,0.15); padding: 12px; border-radius: 8px; margin-bottom: 15px; background: rgba(0,0,0,0.15); font-size: 12px; color: #94a3b8;">
+      <i class="fa-solid fa-circle-info" style="color: #38edf8;"></i> Skrip akan otomatis menghasilkan aturan firewall lengkap sesuai template standar perlindungan router VNET MEDIA.
+    </div>
+
+    <!-- Tombol Aksi -->
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+      <button class="btn-clear" onclick="clearForm()" style="padding: 10px 20px; background: #b04646; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold;">
+        <i class="fa-solid fa-trash-can"></i> CLEAR
+      </button>
+      <button class="btn-generate" onclick="generateCustomFirewall()" style="padding: 10px 25px; margin: 0;">
+        <i class="fa-solid fa-wand-magic-sparkles"></i> GENERATE
+      </button>
+    </div>
+
+    <!-- Results Output Area (Awalnya Sembunyi/Clean) -->
+    <div id="outputSection" style="margin-top: 18px; display: none;">
+      
+      <!-- Script Firewall (Add) -->
+      <div class="section-title"><i class="fa-solid fa-code" style="color: #2dff00;"></i> SCRIPT ADD FIREWALL PROTECTION</div>
+      <div class="result-box" id="main-script" style="white-space: pre-wrap; font-family: monospace;"></div>
+      <button class="btn-copy" onclick="copyText('main-script')" style="margin-top: 8px; margin-bottom: 16px; width: 100%;">
+        <i class="fa-solid fa-copy"></i> Copy Script Firewall Protection
+      </button>
+
+      <!-- Script Remove/Cleanup Firewall -->
+      <div class="section-title"><i class="fa-solid fa-trash-can" style="color: #ff0000;"></i> SCRIPT REMOVE / CLEANUP FIREWALL</div>
+      <div class="result-box" id="remove-script" style="white-space: pre-wrap; font-family: monospace; color: #ff6b6b;"></div>
+      <button class="btn-copy" onclick="copyText('remove-script')" style="margin-top: 8px; margin-bottom: 16px; width: 100%; background: #b04646;">
+        <i class="fa-solid fa-copy"></i> Copy Script Remove Firewall
+      </button>
+
+    </div>
+
+    <!-- Quote & Disclaimer Card -->
+    <div class="disclaimer-card" style="margin-top: 16px;">
+      <span class="disclaimer-tag">MUTIARA HIKMAH</span>
+      "Ada begitu banyak masalah yang kita alami setiap hari, masalah pekerjaan, rumah, hubungan, kehidupan. Tapi kita lupa bahwa masalah terbesar kita adalah permasalahan iman." — <em>Anonim</em>
+    </div>
+
+    <!-- Footer IP Info -->
+    <div class="footer">
+      <div>© 2026 <strong>NETWORK-TOOLS.COM</strong></div>
+      <div class="ip-info">
+        <span>IP Public: <strong id="userPublicIp">Loading...</strong></span> | 
+        <span>IP Local: <strong id="userLocalIp">Loading...</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    function generateCustomFirewall() {
+      const pubIp = document.getElementById('pub-ip').value.trim() || "103.86.116.157";
+      const wanInterface = document.getElementById('wan-interface').value.trim() || "ether1";
+      const commentTag = "VNET-SEC-FIREWALL";
+
+      // 1. Script Pembersih
+      let removeScript = `##################################################\n`;
+      removeScript += `# CLEANUP SCRIPT - VNET CUSTOM FIREWALL\n`;
+      removeScript += `##################################################\n`;
+      removeScript += `/ip firewall filter remove [find comment~"${commentTag}"]\n`;
+      
+      document.getElementById('remove-script').innerText = removeScript;
+
+      // 2. Script Utama Firewall
+      let mainScript = `##################################################\n`;
+      mainScript += `# VNET MEDIA CUSTOM FIREWALL PROTECTION\n`;
+      mainScript += `##################################################\n\n`;
+      
+      mainScript += `/ip firewall filter\n`;
+      mainScript += `# 1. Izinkan ICMP (Ping) di ATAS agar monitoring router core tidak terhalang\n`;
+      mainScript += `add action=accept chain=input protocol=icmp comment="${commentTag} - izinkan ping router core"\n\n`;
+
+      mainScript += `# 2. Blokir serangan DDoS DNS & port sensitif dari publik\n`;
+      mainScript += `add action=drop chain=input comment="${commentTag} - blokir ddos dns public" \\\n`;
+      mainScript += `    dst-address=${pubIp} dst-port=\\\n`;
+      mainScript += `    53,853,5353,25,21-23,587,465,110,995,143,993,1080,8082 in-interface=\\\n`;
+      mainScript += `    ${wanInterface} protocol=tcp\n`;
+      mainScript += `add action=drop chain=input dst-address=${pubIp} dst-port=\\\n`;
+      mainScript += `    53,853,5353,25,21-23,587,465,110,995,143,993,1080,8082 in-interface=\\\n`;
+      mainScript += `    ${wanInterface} protocol=udp\n\n`;
+
+      mainScript += `# 3. Blokir Open Proxy dari publik\n`;
+      mainScript += `add action=drop chain=input comment="${commentTag} - blokir open proxy public" \\\n`;
+      mainScript += `    dst-address=${pubIp} dst-port=3128,8080,8000,6588,3127 \\\n`;
+      mainScript += `    in-interface=${wanInterface} protocol=tcp\n`;
+      mainScript += `add action=drop chain=input dst-address=${pubIp} dst-port=3128,8080,8000,6588,3127 \\\n`;
+      mainScript += `    in-interface=${wanInterface} protocol=udp\n\n`;
+
+      mainScript += `# 4. Blokir SSDP / UPnP dari publik\n`;
+      mainScript += `add action=drop chain=input comment="${commentTag} - blokir ssdp upnp public" \\\n`;
+      mainScript += `    dst-address=${pubIp} dst-port=1900,5353 \\\n`;
+      mainScript += `    in-interface=${wanInterface} protocol=udp\n\n`;
+
+      mainScript += `# 5. Blokir SNMP dari publik\n`;
+      mainScript += `add action=drop chain=input comment="${commentTag} - blokir snmp public" \\\n`;
+      mainScript += `    dst-address=${pubIp} dst-port=161,162 \\\n`;
+      mainScript += `    in-interface=${wanInterface} protocol=udp\n\n`;
+
+      mainScript += `# 6. Blokir trafik port berbahaya keluar menuju interface publik\n`;
+      mainScript += `add action=drop chain=forward dst-port=135-139,445,28015-28016,28316 \\\n`;
+      mainScript += `    out-interface=${wanInterface} protocol=tcp src-address-list=RFC1918\n`;
+      mainScript += `add action=drop chain=forward dst-port=135-139,445,28015-28016,28316 \\\n`;
+      mainScript += `    out-interface=${wanInterface} protocol=udp src-address-list=RFC1918\n\n`;
+
+      mainScript += `# 7. Deteksi otomatis spammer email dari jaringan lokal\n`;
+      mainScript += `add action=add-src-to-address-list address-list=spammer address-list-timeout=\\\n`;
+      mainScript += `    15m chain=forward connection-limit=10,32 dst-port=\\\n`;
+      mainScript += `    25,587,465,110,995,143,993 in-interface=!${wanInterface} limit=50,5:packet \\\n`;
+      mainScript += `    protocol=tcp src-address-list=RFC1918\n`;
+      mainScript += `add action=add-src-to-address-list address-list=spammer address-list-timeout=\\\n`;
+      mainScript += `    15m chain=forward connection-limit=10,32 dst-port=\\\n`;
+      mainScript += `    25,587,465,110,995,143,993 in-interface=!${wanInterface} limit=50,5:packet \\\n`;
+      mainScript += `    protocol=udp src-address-list=RFC1918\n\n`;
+
+      mainScript += `# 8. Eksekusi blokir untuk IP yang masuk daftar spammer\n`;
+      mainScript += `add action=drop chain=forward dst-port=25,587,465,110,995,143,993 \\\n`;
+      mainScript += `    out-interface=${wanInterface} protocol=tcp src-address-list=spammer\n`;
+      mainScript += `add action=drop chain=forward dst-port=25,587,465,110,995,143,993 \\\n`;
+      mainScript += `    out-interface=${wanInterface} protocol=udp src-address-list=spammer\n`;
+
+      document.getElementById('main-script').innerText = mainScript;
+
+      // Tampilkan area output setelah tombol GENERATE diklik
+      document.getElementById('outputSection').style.display = 'block';
+    }
+
+    function clearForm() {
+      document.getElementById('main-script').innerText = '';
+      document.getElementById('remove-script').innerText = '';
+      
+      // Sembunyikan kembali area output saat tombol CLEAR diklik
+      document.getElementById('outputSection').style.display = 'none';
+    }
+
+    // Fungsi Copy Text Universal
+    function copyText(elementId) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      if (!textToCopy) return;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          alert('Script firewall berhasil dicopy!');
+        }).catch(() => {
+          fallbackCopyText(textToCopy);
+        });
+      } else {
+        fallbackCopyText(textToCopy);
+      }
+    }
+
+    function fallbackCopyText(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        alert('Script firewall berhasil dicopy!');
+      } catch (err) {
+        alert('Gagal menyalin script.');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    // IP Checkers
+    fetch('https://api.ipify.org?format=json')
+      .then(res => res.json())
+      .then(data => document.getElementById('userPublicIp').innerText = data.ip)
+      .catch(() => document.getElementById('userPublicIp').innerText = 'N/A');
+
+    function getLocalIP() {
+      return new Promise((resolve) => {
+        const pc = new RTCPeerConnection({ iceServers: [] });
+        pc.createDataChannel('');
+        pc.createOffer().then(pc.setLocalDescription.bind(pc));
+        pc.onicecandidate = (ice) => {
+          if (!ice || !ice.candidate || !ice.candidate.candidate) return;
+          const ipMatch = ice.candidate.candidate.match(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}/);
+          if (ipMatch) { resolve(ipMatch[0]); pc.onicecandidate = () => {}; }
+        };
+        setTimeout(() => resolve('Blocked'), 1200);
+      });
+    }
+
+    getLocalIP().then(ip => {
+      const el = document.getElementById('userLocalIp');
+      el.innerText = (ip === 'Blocked') ? 'Hidden (Privacy)' : ip;
+    });
+  </script>
+</body>
+</html>
