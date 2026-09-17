@@ -123,39 +123,45 @@
     </div>
   </div>
 
-  <!-- POPUP MENU UTAMA -->
-  <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event, 'popupMenu', 'popupOverlay')">
-      <div class="popup-menu" id="popupMenu">
-          <div class="popup-header">
-              <h3><i class="fa-solid fa-server" style="color: #ff9900;"></i> MENU</h3>
-              <button class="close-btn" onclick="togglePopup('popupMenu', 'popupOverlay')"><i class="fa-solid fa-xmark"></i></button>
-          </div>
-          <div class="popup-body">
-              <div class="popup-grid">
-                  <a href="index.html" class="popup-tool-item">
-                      <span><i class="fa-solid fa-home"></i> Home</span>
-                      <span class="popup-badge">Open</span>
-                  </a>
-                  <a href="pcc.html" class="popup-tool-item">
-                      <span><i class="fa-solid fa-scale-balanced"></i> Load Balance PCC</span>
-                      <span class="popup-badge">Open</span>
-                  </a>
-                  <a href="#" class="popup-tool-item">
-                      <span><i class="fa-solid fa-user-ninja"></i> Ninja</span>
-                      <span class="popup-badge">Open</span>
-                  </a>
-                  <a href="#" class="popup-tool-item">
-                      <span><i class="fa-solid fa-shield-halved"></i> Firewall</span>
-                      <span class="popup-badge">Open</span>
-                  </a>
-                  <a href="#" class="popup-tool-item">
-                      <span><i class="fa-brands fa-telegram"></i> PPP</span>
-                      <span class="popup-badge">Open</span>
-                  </a>
-              </div>
-          </div>
-      </div>
-  </div>
+   <!-- Kotak Popup Menu di Tengah (Gaya Card Mikrotik) -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+        <div class="popup-menu" id="popupMenu">
+            
+            <!-- Header Popup -->
+            <div class="popup-header">
+                <h3><i class="fa-solid fa-server" style="color: #ff9900;"></i> MENU</h3>
+                <button class="close-btn" onclick="togglePopup()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Isi Menu Berbentuk Grid Kartu ala Mikrotik -->
+            <div class="popup-body">
+                <div class="popup-grid">
+                    <a href="/" class="popup-tool-item">
+                        <span><i class="fa-solid fa-home"></i> Home</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="pcc.html" class="popup-tool-item">
+                        <span><i class="fa-solid fa-scale-balanced"></i> Load Blanace PCC</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="ninja.html" class="popup-tool-item">
+                        <span><i class="fa-solid fa-user-ninja"></i> Ninja</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="rcf.html" class="popup-tool-item logout-item">
+                        <span><i class="fa-solid fa-shield-halved"></i> Firewal RCF</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    
+                    <a href="ppp.html" class="popup-tool-item logout-item">
+                        <span><i class="fa-brands fa-telegram"></i> PPP</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
   <!-- POPUP HASIL GENERATE SCRIPT -->
   <div class="popup-overlay" id="resultPopupOverlay" onclick="closePopup(event, 'resultPopupMenu', 'resultPopupOverlay')">
