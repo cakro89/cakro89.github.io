@@ -360,6 +360,14 @@ body {
 }
 
 @media (max-width: 600px) {
+
+
+body {
+  min-height: 85vh;
+  padding: 5px;
+}
+
+
   .tools-grid {
     grid-template-columns: 1fr;
   }

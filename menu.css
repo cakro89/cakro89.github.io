@@ -1,7 +1,7 @@
 .menu-container {
     position: fixed;
-    top: 20px;
-    right: 20px;
+    top: 0px;
+    right: 150px;
     z-index: 1000;
 }
 
@@ -9,7 +9,7 @@
     background-color: #242424;
     color: #ff9900;
     border: 1px solid #333;
-    padding: 10px 18px;
+    padding: 6px 20px;
     border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
@@ -23,7 +23,7 @@
 
 .menu-btn:hover {
     background-color: #b9de06;
-    border-color: #000000;
+    border-color: #2d13b0;
     color: #000000;
 }
 
