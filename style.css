@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 @import url('menu.css');
 @import url('ninja.css');
+=======
+<<<<<<< HEAD
+=======
+@import url('menu.css');
+@import url('ninja.css');
+>>>>>>> 17d3495 (UPDATE BARU 17/09/2026)
+>>>>>>> cb6bbb4
 :root {
   --primary: #d19a66;
   --bg-dark: #1f1212;
@@ -24,7 +32,15 @@ body {
   color: var(--text-main);
   justify-content: center;
   min-height: 100vh;
+<<<<<<< HEAD
   padding: 5px;
+=======
+<<<<<<< HEAD
+  padding: 8px;
+=======
+  padding: 5px;
+>>>>>>> 17d3495 (UPDATE BARU 17/09/2026)
+>>>>>>> cb6bbb4
 }
 
 * {
@@ -42,7 +58,15 @@ body {
   width: 100%;
   max-width: 600px;
   border-radius: 8px;
+<<<<<<< HEAD
   padding: 11px;
+=======
+<<<<<<< HEAD
+  padding: 12px;
+=======
+  padding: 11px;
+>>>>>>> 17d3495 (UPDATE BARU 17/09/2026)
+>>>>>>> cb6bbb4
   background: var(--bg-card);
   border: 1px solid var(--border-color);
 }
@@ -88,7 +112,15 @@ body {
 
 .search-input {
   flex: 1;
+<<<<<<< HEAD
   padding: 6px 10px;
+=======
+<<<<<<< HEAD
+  padding: 8px 10px;
+=======
+  padding: 6px 10px;
+>>>>>>> 17d3495 (UPDATE BARU 17/09/2026)
+>>>>>>> cb6bbb4
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background-color: var(--bg-dark);
@@ -145,7 +177,15 @@ body {
 .tool-btn {
   background: #221f1c;
   color: var(--text-main);
+<<<<<<< HEAD
   padding: 4px 9px;
+=======
+<<<<<<< HEAD
+  padding: 8px 10px;
+=======
+  padding: 4px 9px;
+>>>>>>> 17d3495 (UPDATE BARU 17/09/2026)
+>>>>>>> cb6bbb4
   border-radius: 6px;
   font-size: 11px;
   font-weight: 500;
