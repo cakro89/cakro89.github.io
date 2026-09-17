@@ -12,6 +12,14 @@
 </head>
 <body>
 
+
+   <!-- Tombol Menu di Pojok Kanan Atas -->
+    <div class="menu-container">
+        <button class="menu-btn" onclick="togglePopup()">
+            <i class="fa-solid fa-bars"></i> MENU
+        </button>
+    </div>
+
   <div class="container">
     <!-- Header Banner dengan Tombol Home -->
     <div class="header-banner">
@@ -94,6 +102,62 @@
       </div>
     </div>
   </div>
+
+
+   <!-- Kotak Popup Menu di Tengah (Gaya Card Mikrotik) -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+        <div class="popup-menu" id="popupMenu">
+            
+            <!-- Header Popup -->
+            <div class="popup-header">
+                <h3><i class="fa-solid fa-server" style="color: #ff9900;"></i> MENU</h3>
+                <button class="close-btn" onclick="togglePopup()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Isi Menu Berbentuk Grid Kartu ala Mikrotik -->
+            <div class="popup-body">
+                <div class="popup-grid">
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-home"></i> Home</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-scale-balanced"></i> Load Blanace PCC</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-user-ninja"></i> Ninja</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="#" class="popup-tool-item logout-item">
+                        <span><i class="fa-solid fa-shield-halved"></i> Firewal</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    
+                    <a href="#" class="popup-tool-item logout-item">
+                        <span><i class="fa-brands fa-telegram"></i> PPP</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function togglePopup() {
+            const overlay = document.getElementById('popupOverlay');
+            overlay.classList.toggle('active');
+        }
+
+        function closePopup(event) {
+            const menu = document.getElementById('popupMenu');
+            if (!menu.contains(event.target)) {
+                togglePopup();
+            }
+        }
+    </script>
 
   <!-- JavaScript Logic -->
   <script>
