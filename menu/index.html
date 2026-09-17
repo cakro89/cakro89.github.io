@@ -1,0 +1,66 @@
+
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <!-- Tombol Menu di Pojok Kanan Atas -->
+    <div class="menu-container">
+        <button class="menu-btn" onclick="togglePopup()">
+            <i class="fa-solid fa-bars"></i> MENU
+        </button>
+    </div>
+
+   
+
+    <!-- Kotak Popup Menu di Tengah (Gaya Card Mikrotik) -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+        <div class="popup-menu" id="popupMenu">
+            
+            <!-- Header Popup -->
+            <div class="popup-header">
+                <h3><i class="fa-solid fa-bolt" style="color: #ff9900;"></i> QUICK NAVIGATION</h3>
+                <button class="close-btn" onclick="togglePopup()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Isi Menu Berbentuk Grid Kartu ala Mikrotik -->
+            <div class="popup-body">
+                <div class="popup-grid">
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-user-gear"></i> Profil Saya</span>
+                        <span class="popup-badge">view</span>
+                    </a>
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-cog"></i> Pengaturan</span>
+                        <span class="popup-badge">config</span>
+                    </a>
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-paint-brush"></i> Tampilan</span>
+                        <span class="popup-badge">theme</span>
+                    </a>
+                    <a href="#" class="popup-tool-item logout-item">
+                        <span><i class="fa-solid fa-sign-out-alt"></i> Keluar</span>
+                        <span class="popup-badge">exit</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function togglePopup() {
+            const overlay = document.getElementById('popupOverlay');
+            overlay.classList.toggle('active');
+        }
+
+        function closePopup(event) {
+            const menu = document.getElementById('popupMenu');
+            if (!menu.contains(event.target)) {
+                togglePopup();
+            }
+        }
+    </script>
+
+</body>
+</html>

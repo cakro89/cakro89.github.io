@@ -9,6 +9,35 @@
   <link rel="apple-touch-icon" href="img/favicon.png?v=2">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="style.css?v=11">
+  <style>
+    /* CSS tambahan untuk animasi dan tampilan toggle section */
+    .section-title {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+    .section-title i.toggle-icon {
+      transition: transform 0.3s ease;
+    }
+    .section-title.collapsed i.toggle-icon {
+      transform: rotate(-90deg);
+    }
+    .tools-grid {
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      max-height: 1000px;
+      opacity: 1;
+    }
+    .tools-grid.collapsed {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      pointer-events: none;
+    }
+  </style>
 </head> 
 <body>
 
@@ -24,9 +53,13 @@
       <button class="btn-clear" onclick="clearSearch()">Clear</button>
     </div>
 
-    <div class="section-title">☰ FREE FAST MIKROTIK SCRIPT GENERATOR</div>
+    <!-- Bagian 1: FREE FAST MIKROTIK SCRIPT GENERATOR (Terbuka Default) -->
+    <div class="section-title" onclick="toggleSection('toolsContainer', this)">
+      <span>☰ FREE FAST MIKROTIK SCRIPT GENERATOR</span>
+      <i class="fa-solid fa-chevron-down toggle-icon"></i>
+    </div>
     
-    <!-- DAFTAR LENGKAP 60+ TOOLS -->
+    <!-- DAFTAR LENGKAP 60+ TOOLS (Tanpa class collapsed agar terbuka) -->
     <div class="tools-grid" id="toolsContainer">
       <button class="tool-btn" onclick="openModal('addAdminUser')">
         <span><i class="fa-solid fa-user-gear"></i> Add Admin User</span>
@@ -69,11 +102,15 @@
       </button>
     </div>
 
-    <div class="section-title">☰ TOOL MIKROTIK SCRIPT GENERATOR</div>
+
     
-    <!-- ID diubah ke toolsContainer2 agar tidak bentrok -->
+    <!-- Bagian 2: TOOL MIKROTIK SCRIPT GENERATOR (Tertutup Default) -->
+    <div class="section-title" onclick="toggleSection('toolsContainer2', this)">
+      <span>☰ TOOL MIKROTIK SCRIPT GENERATOR</span>
+      <i class="fa-solid fa-chevron-down toggle-icon"></i>
+    </div>
+    
     <div class="tools-grid" id="toolsContainer2">
-      <!-- Tag <a href> ditutup dengan </a> yang benar -->
       <a href="ninja.html" class="tool-btn">
         <span><i class="fa-solid fa-user-ninja"></i> Mikrotik Ninja</span>
         <span class="tag-free">free</span>
@@ -151,6 +188,27 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script src="logic.js"></script>
+  <script>
+    // Fungsi untuk membuka/menutup section menu beserta animasi putar ikon
+    function toggleSection(containerId, element) {
+      const container = document.getElementById(containerId);
+      container.classList.toggle('collapsed');
+      element.classList.toggle('collapsed');
+    }
+
+    // Otomatis buka semua menu saat kolom pencarian diketik
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const keyword = this.value.trim();
+      if (keyword.length > 0) {
+        document.querySelectorAll('.tools-grid').forEach(grid => {
+          grid.classList.remove('collapsed');
+        });
+        document.querySelectorAll('.section-title').forEach(title => {
+          title.classList.remove('collapsed');
+        });
+      }
+    });
+  </script>
 
 </body>
 </html>

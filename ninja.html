@@ -8,10 +8,15 @@
   <link rel="shortcut icon" href="img/favicon.png?v=22">
   <link rel="apple-touch-icon" href="img/favicon.png?v=2">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="ninja.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+ <!-- Tombol Menu di Pojok Kanan Atas -->
+    <div class="menu-container">
+        <button class="menu-btn" onclick="togglePopup()">
+            <i class="fa-solid fa-bars"></i> MENU
+        </button>
+    </div>
      <div class="container">
     <!-- Header Banner dengan Tombol Panah Kiri Home -->
     <div class="header-banner">
@@ -97,14 +102,76 @@
     </div>
   </div>
 
+
+
+
+  <!-- Kotak Popup Menu di Tengah (Gaya Card Mikrotik) -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+        <div class="popup-menu" id="popupMenu">
+            
+            <!-- Header Popup -->
+            <div class="popup-header">
+                <h3><i class="fa-solid fa-server" style="color: #ff9900;"></i> MENU</h3>
+                <button class="close-btn" onclick="togglePopup()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Isi Menu Berbentuk Grid Kartu ala Mikrotik -->
+            <div class="popup-body">
+                <div class="popup-grid">
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-home"></i> Home</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-scale-balanced"></i> Load Blanace PCC</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="#" class="popup-tool-item">
+                        <span><i class="fa-solid fa-user-ninja"></i> Ninja</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    <a href="#" class="popup-tool-item logout-item">
+                        <span><i class="fa-solid fa-shield-halved"></i> Firewal</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                    
+                    <a href="#" class="popup-tool-item logout-item">
+                        <span><i class="fa-brands fa-telegram"></i> PPP</span>
+                        <span class="popup-badge">Open</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function togglePopup() {
+            const overlay = document.getElementById('popupOverlay');
+            overlay.classList.toggle('active');
+        }
+
+        function closePopup(event) {
+            const menu = document.getElementById('popupMenu');
+            if (!menu.contains(event.target)) {
+                togglePopup();
+            }
+        }
+    </script>
+
     <script>
         function generateRandomIdentity() {
             const names = [
-                "ASUS-ROG", "PLAYSTATION", "OPPO-A11", "REDMI", 
-                "HP-PROBOOK", "THINKPAD", "ARCHER", "CATALYST", 
-                "HUAWEI-OLT", "CCR-ROUTER", "SAMSUNG-GALAXY", "IPHONE-PRO", 
-                "MACBOOK-AIR", "XIAOMI-PAD", "REALME-NARZO", "VIVO-Y20"
-            ];
+  "ASUS-ROG", "OPPO-A11", "REDMI", 
+  "HP-PROBOOK", "THINKPAD", "SAMSUNG-GALAXY", "IPHONE-PRO", 
+  "MACBOOK-AIR", "XIAOMI-PAD", "REALME-NARZO", "VIVO-Y20",
+  "ACER-ACPIRE", "MSI-THIN", "LENOVO-IDEAPAD", "DELL-LATITUDE",
+  "IPAD-PRO", "POCO-PHONE", "INFINIX-HOT", "TECNO-SPARK",
+  "ALIENWARE", "OMEN-HP", "ASUS-ZENBOOK", "ROG-STRIX", 
+  "SURFACE-PRO", "PIXEL-PHONE", "ONEPLUS-PRO", "IQOO-LEGEND", 
+  "BLACK-SHARK"
+];
             document.getElementById("new-identity").value = names[Math.floor(Math.random() * names.length)];
         }
 
