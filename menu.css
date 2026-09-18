@@ -1,8 +1,9 @@
 .menu-container {
     position: fixed;
-    top: 0px;
-    right: 150px;
-    z-index: 1000;
+    top: -10px; /* Jarak dari atas layar */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
 }
 
 .menu-btn {
@@ -161,3 +162,4 @@
   .popup-menu {
     width: 390px;
   }
+}

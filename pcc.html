@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="menu.css">
 </head>
 <body>
- <!-- Tombol Menu di Pojok Kanan Atas -->
+ <!-- Tombol Menu di Tengah Atas -->
     <div class="menu-container">
         <button class="menu-btn" onclick="togglePopup('popupMenu', 'popupOverlay')">
             <i class="fa-solid fa-bars"></i> MENU
@@ -123,14 +123,15 @@
     </div>
   </div>
 
-   <!-- Kotak Popup Menu di Tengah (Gaya Card Mikrotik) -->
-    <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+   
+  <!-- Kotak Popup Menu di Tengah (Gaya Card Mikrotik) -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup(event, 'popupMenu', 'popupOverlay')">
         <div class="popup-menu" id="popupMenu">
             
             <!-- Header Popup -->
             <div class="popup-header">
                 <h3><i class="fa-solid fa-server" style="color: #ff9900;"></i> MENU</h3>
-                <button class="close-btn" onclick="togglePopup()"><i class="fa-solid fa-xmark"></i></button>
+                <button class="close-btn" onclick="togglePopup('popupMenu', 'popupOverlay')"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <!-- Isi Menu Berbentuk Grid Kartu ala Mikrotik -->
@@ -200,14 +201,19 @@
 
   <!-- JavaScript Logic -->
   <script>
+      // Fungsi universal untuk membuka/menutup popup
       function togglePopup(menuId, overlayId) {
           const overlay = document.getElementById(overlayId);
-          overlay.classList.toggle('active');
+          if (overlay) {
+              overlay.classList.toggle('active');
+          }
       }
 
+      // Fungsi untuk menutup popup ketika area gelap/overlay diklik
       function closePopup(event, menuId, overlayId) {
-          if (event.target === document.getElementById(overlayId)) {
-              togglePopup(menuId, overlayId);
+          const overlay = document.getElementById(overlayId);
+          if (event.target === overlay) {
+              overlay.classList.remove('active');
           }
       }
 
@@ -414,11 +420,9 @@
           removeScript += `/routing table remove [find name~"to_wan"]\n`;
         }
 
-        // Masukkan teks ke dalam elemen popup hasil
         document.getElementById('scriptPccAdd').innerText = addScript;
         document.getElementById('scriptPccRemove').innerText = removeScript;
         
-        // Tampilkan popup hasil generate
         togglePopup('resultPopupMenu', 'resultPopupOverlay');
       }
 
