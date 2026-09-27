@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Qur'an Digital - Auto-Play Antar Surat & Per Baris</title>
+    <title>Al-Qur'an Digital - Auto Ganti Halaman & Auto-Play</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -299,11 +299,11 @@
 
     <header>
         <h1>Al-Qur'an Mushaf Digital</h1>
-        <p>Auto-Play Antar Surat & Tampilan Per Baris</p>
+        <p>Auto-Ganti Halaman & Auto-Play</p>
     </header>
 
     <div class="top-controls">
-        <select id="daftar-surat" onchange="pilihSurat(this.value)">
+        <select id="daftar-surat" onchange="pilihSuratManual(this.value)">
             <option value="">-- Memuat Daftar Surat --</option>
         </select>
     </div>
@@ -333,7 +333,7 @@
 
     <div class="audio-bar">
         <span id="audio-status" style="font-size: 0.8rem; font-weight: 600; color: var(--primary-color);">Status: Siap Memutar</span>
-        <button id="btnPlayAll" onclick="togglePlayAll()">▶ Putar Otomatis (Continous)</button>
+        <button id="btnPlayAll" onclick="togglePlayAll()">▶ Putar Otomatis (Continuous)</button>
     </div>
 
     <audio id="audio-player" style="display: none;"></audio>
@@ -344,7 +344,6 @@
         let currentSuratData = null;
         let currentAyatIndex = 0;
         let isPlayingAll = false;
-        let daftarSemuaSurat = [];
 
         const juzMapping = [
             { juz: 1, surat: 1 }, { juz: 2, surat: 2 }, { juz: 3, surat: 2 },
@@ -362,7 +361,7 @@
         async function initApp() {
             await loadDaftarSurat();
             renderJuzGrid();
-            muatSurat(1);
+            await muatSurat(1);
         }
 
         async function loadDaftarSurat() {
@@ -370,10 +369,9 @@
                 const res = await fetch('https://equran.id/api/v2/surat');
                 const json = await res.json();
                 if (json.code === 200) {
-                    daftarSemuaSurat = json.data;
                     const select = document.getElementById('daftar-surat');
                     select.innerHTML = '<option value="">-- Pilih Surat (1 - 114) --</option>';
-                    daftarSemuaSurat.forEach(s => {
+                    json.data.forEach(s => {
                         let opt = document.createElement('option');
                         opt.value = s.nomor;
                         opt.textContent = `${s.nomor}. ${s.namaLatin} (${s.arti}) - ${s.jumlahAyat} Ayat`;
@@ -393,7 +391,7 @@
                 div.className = 'juz-item';
                 div.textContent = `Juz ${item.juz}`;
                 div.onclick = () => {
-                    pilihSurat(item.surat);
+                    pilihSuratManual(item.surat);
                     toggleJuzModal();
                 };
                 container.appendChild(div);
@@ -408,17 +406,18 @@
             if (e.target.id === 'juzModal') toggleJuzModal();
         }
 
-        function pilihSurat(nomor) {
+        // Dipanggil saat user memilih manual via dropdown atau menu juz
+        async function pilihSuratManual(nomor) {
             if (nomor) {
+                stopAudio();
                 currentSuratNomor = parseInt(nomor);
                 document.getElementById('daftar-surat').value = nomor;
-                muatSurat(nomor);
+                await muatSurat(nomor);
             }
         }
 
+        // Fungsi fetch data surat dan render ke layar
         async function muatSurat(nomor) {
-            stopAudio();
-            currentSuratNomor = parseInt(nomor);
             const container = document.getElementById('mushaf-content');
             container.innerHTML = '<div class="loading">Membuka lembaran mushaf...</div>';
 
@@ -428,7 +427,7 @@
 
                 if (json.code === 200) {
                     currentSuratData = json.data;
-                    currentAyatIndex = 0;
+                    currentSuratNomor = parseInt(nomor);
 
                     let html = `
                         <div class="surat-title-box">
@@ -437,7 +436,6 @@
                         </div>
                     `;
 
-                    // Tampilkan per baris untuk setiap ayat
                     currentSuratData.ayat.forEach((a, idx) => {
                         html += `
                             <div class="ayat-row-card" id="row-card-${idx}">
@@ -452,6 +450,7 @@
                     });
 
                     container.innerHTML = html;
+                    document.getElementById('daftar-surat').value = nomor;
                 }
             } catch (e) {
                 container.innerHTML = '<div class="loading" style="color:red;">Gagal memuat surat. Periksa koneksi Anda.</div>';
@@ -472,21 +471,28 @@
         function playSingleAyat(index) {
             isPlayingAll = true;
             document.getElementById('btnPlayAll').textContent = '⏹ Jeda Auto-Play';
+            currentAyatIndex = index;
             playAyatSequence(index);
         }
 
-        function playAyatSequence(index) {
+        // Fungsi rekursif untuk menjalankan ayat secara beruntun dan ganti halaman otomatis
+        async function playAyatSequence(index) {
             if (!isPlayingAll || !currentSuratData) return;
 
-            // Jika sudah habis di surat ini, otomatis lanjut ke surat berikutnya (114 surat maksimal)
+            // Jika ayat di surat ini sudah habis, otomatis pindah ke surat berikutnya
             if (index >= currentSuratData.ayat.length) {
                 let nextSurat = currentSuratNomor + 1;
                 if (nextSurat <= 114) {
-                    document.getElementById('audio-status').textContent = `Pindah otomatis ke Surat ${nextSurat}...`;
-                    pilihSurat(nextSurat);
-                    setTimeout(() => {
-                        if (isPlayingAll) playAyatSequence(0);
-                    }, 1000);
+                    document.getElementById('audio-status').textContent = `Berpindah ke Surat berikutnya...`;
+                    currentAyatIndex = 0;
+                    
+                    // Muat surat baru secara asinkronus dan tunggu sampai selesai dirender
+                    await muatSurat(nextSurat);
+
+                    // Lanjutkan pemutaran untuk ayat pertama di surat baru
+                    if (isPlayingAll) {
+                        playAyatSequence(0);
+                    }
                 } else {
                     stopAudio();
                     document.getElementById('audio-status').textContent = 'Tamat (Surat 114 Selesai)';
@@ -505,18 +511,22 @@
             document.getElementById('audio-status').textContent = `Memutar: ${currentSuratData.namaLatin} - Ayat ${ayat.nomorAyat}`;
             currentAudio.src = audioUrl;
             currentAudio.load();
-            currentAudio.play().catch(err => console.error("Audio error", err));
+            
+            try {
+                await currentAudio.play();
+            } catch (err) {
+                console.error("Audio play error:", err);
+            }
 
             currentAudio.onended = function() {
-                playAyatSequence(index + 1);
+                if (isPlayingAll) {
+                    playAyatSequence(index + 1);
+                }
             };
         }
 
         function highlightActiveRow(index) {
-            // Hapus highlight sebelumnya
             document.querySelectorAll('.ayat-row-card').forEach(el => el.classList.remove('active-playing'));
-            
-            // Beri highlight baris yang sedang aktif
             const activeCard = document.getElementById(`row-card-${index}`);
             if (activeCard) {
                 activeCard.classList.add('active-playing');
@@ -529,7 +539,7 @@
             isPlayingAll = false;
             currentAyatIndex = 0;
             document.querySelectorAll('.ayat-row-card').forEach(el => el.classList.remove('active-playing'));
-            document.getElementById('btnPlayAll').textContent = '▶ Putar Otomatis (Continous)';
+            document.getElementById('btnPlayAll').textContent = '▶ Putar Otomatis (Continuous)';
             document.getElementById('audio-status').textContent = 'Status: Siap Memutar';
         }
 
