@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-Qur'an Mushaf Digital - Full Search Edition</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="style.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+
+    <!-- Area Sticky di Atas -->
+    <div class="sticky-top-container">
+        <header class="quran-header py-2 text-center">
+            <div class="container">
+                <h1 class="h5 fw-bold mb-0">Al-Qur'an Mushaf Digital</h1>
+                <p class="mb-0" style="font-size: 0.75rem; opacity: 0.85;">Bootstrap Edition • Pencarian Surat & Audio</p>
+            </div>
+        </header>
+
+        <div class="container py-2">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <!-- Dropdown Utama (bisa diketik via tombol cari atau diklik langsung) -->
+                    <div class="input-group input-group-sm shadow-sm">
+                        <select id="daftar-surat" class="form-select" onchange="pilihSuratManual(this.value)">
+                            <option value="">-- Memuat Daftar Surat --</option>
+                        </select>
+                        <button class="btn btn-success px-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas">
+                            🔍 Cari Surat
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Konten Lembaran Mushaf -->
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <div class="mushaf-page" id="mushaf-content">
+                    <div class="text-center py-5 text-muted">Memuat halaman...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol Mengambang (Juz & Cari Cepat) -->
+    <div class="floating-btn-group">
+        <button class="floating-fab" data-bs-toggle="offcanvas" data-bs-target="#searchOffcanvas" title="Cari Surat">
+            <span class="fs-5">🔍</span>
+            <span>CARI</span>
+        </button>
+        <button class="floating-fab" data-bs-toggle="offcanvas" data-bs-target="#juzOffcanvas" title="Pilih Juz">
+            <span class="fs-5">📖</span>
+            <span>JUZ</span>
+        </button>
+    </div>
+
+    <!-- Offcanvas Kotak Pencarian Surat yang Bisa Diketik -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="searchOffcanvas" aria-labelledby="searchOffcanvasLabel">
+        <div class="offcanvas-header text-white" style="background-color: var(--primary-color);">
+            <h5 class="offcanvas-title" id="searchOffcanvasLabel">Cari Nama Surat</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mb-3">
+                <input type="text" id="inputCariSurat" class="form-control" placeholder="Ketik nama surat / arti / nomor..." onkeyup="filterDaftarSurat(this.value)" autofocus>
+            </div>
+            <div id="listHasilPencarian" class="list-group">
+                <!-- Daftar surat hasil filter muncul di sini -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Offcanvas Daftar Juz -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="juzOffcanvas" aria-labelledby="juzOffcanvasLabel">
+        <div class="offcanvas-header text-white" style="background-color: var(--primary-color);">
+            <h5 class="offcanvas-title" id="juzOffcanvasLabel">Pilih Juz (1 - 30)</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="row g-2" id="juzGridContainer"></div>
+        </div>
+    </div>
+
+    <!-- Bar Kontrol Audio Bawah -->
+    <nav class="audio-bar navbar navbar-light px-3 py-2">
+        <div class="container-fluid justify-content-between align-items-center">
+            <span id="audio-status" class="small fw-bold text-success text-truncate me-2" style="max-width: 50%;">Status: Siap Memutar</span>
+            <button id="btnPlayAll" class="btn btn-success btn-sm rounded-pill px-4 fw-semibold shadow-sm" onclick="togglePlayAll()">
+                ▶ Putar Otomatis (Continuous)
+            </button>
+        </div>
+    </nav>
+
+    <audio id="audio-player" class="d-none"></audio>
+
+    <!-- Bootstrap 5 JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        let currentAudio = document.getElementById('audio-player');
+        let currentSuratNomor = 1;
+        let currentSuratData = null;
+        let currentAyatIndex = -1;
+        let isPlayingAll = false;
+        let isPlayingAamiin = false;
+        let globalDataSurat = []; // Menyimpan master data surat untuk pencarian
+
+        const juzMapping = [
+            { juz: 1, surat: 1 }, { juz: 2, surat: 2 }, { juz: 3, surat: 2 },
+            { juz: 4, surat: 3 }, { juz: 5, surat: 4 }, { juz: 6, surat: 4 },
+            { juz: 7, surat: 5 }, { juz: 8, surat: 6 }, { juz: 9, surat: 7 },
+            { juz: 10, surat: 8 }, { juz: 11, surat: 9 }, { juz: 12, surat: 11 },
+            { juz: 13, surat: 12 }, { juz: 14, surat: 15 }, { juz: 15, surat: 17 },
+            { juz: 16, surat: 18 }, { juz: 17, surat: 21 }, { juz: 18, surat: 23 },
+            { juz: 19, surat: 25 }, { juz: 20, surat: 27 }, { juz: 21, surat: 29 },
+            { juz: 22, surat: 33 }, { juz: 23, surat: 36 }, { juz: 24, surat: 39 },
+            { juz: 25, surat: 41 }, { juz: 26, surat: 46 }, { juz: 27, surat: 51 },
+            { juz: 28, surat: 58 }, { juz: 29, surat: 67 }, { juz: 30, surat: 78 }
+        ];
+
+        async function initApp() {
+            await loadDaftarSurat();
+            renderJuzGrid();
+            await muatSurat(1);
+        }
+
+        async function loadDaftarSurat() {
+            try {
+                const res = await fetch('https://equran.id/api/v2/surat');
+                const json = await res.json();
+                if (json.code === 200) {
+                    globalDataSurat = json.data;
+                    const select = document.getElementById('daftar-surat');
+                    select.innerHTML = '<option value="">-- Pilih Surat (1 - 114) --</option>';
+                    
+                    globalDataSurat.forEach(s => {
+                        let opt = document.createElement('option');
+                        opt.value = s.nomor;
+                        opt.textContent = `${s.nomor}. ${s.namaLatin} (${s.arti}) - ${s.jumlahAyat} Ayat`;
+                        select.appendChild(opt);
+                    });
+
+                    // Render juga list pencarian awal di offcanvas
+                    renderListPencarian(globalDataSurat);
+                }
+            } catch (e) {
+                console.error("Gagal memuat daftar surat", e);
+            }
+        }
+
+        function renderListPencarian(dataList) {
+            const container = document.getElementById('listHasilPencarian');
+            container.innerHTML = '';
+            dataList.forEach(s => {
+                let item = document.createElement('button');
+                item.type = 'button';
+                item.className = 'list-group-item list-group-item-action py-2';
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">${s.nomor}. ${s.namaLatin}</span>
+                        <span class="badge bg-success rounded-pill">${s.jumlahAyat} Ayat</span>
+                    </div>
+                    <small class="text-muted">${s.arti} • ${s.nama}</small>
+                `;
+                item.onclick = () => pilihSuratDariPencarian(s.nomor);
+                container.appendChild(item);
+            });
+        }
+
+        function filterDaftarSurat(keyword) {
+            const query = keyword.toLowerCase().trim();
+            const filtered = globalDataSurat.filter(s => 
+                s.namaLatin.toLowerCase().includes(query) ||
+                s.arti.toLowerCase().includes(query) ||
+                s.nomor.toString() === query ||
+                s.nama.includes(query)
+            );
+            renderListPencarian(filtered);
+        }
+
+        function pilihSuratDariPencarian(nomorSurat) {
+            pilihSuratManual(nomorSurat);
+            const searchCanvas = document.getElementById('searchOffcanvas');
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(searchCanvas);
+            if (bsOffcanvas) bsOffcanvas.hide();
+        }
+
+        function renderJuzGrid() {
+            const container = document.getElementById('juzGridContainer');
+            container.innerHTML = '';
+            juzMapping.forEach(item => {
+                let col = document.createElement('div');
+                col.className = 'col-6';
+                col.innerHTML = `
+                    <button class="btn btn-outline-success w-100 py-2 fw-semibold text-start px-3" onclick="pilihJuz(${item.surat})">
+                        Juz ${item.juz}
+                    </button>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        function pilihJuz(nomorSurat) {
+            pilihSuratManual(nomorSurat);
+            const offcanvasElement = document.getElementById('juzOffcanvas');
+            const offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+            if (offcanvasInstance) {
+                offcanvasInstance.hide();
+            }
+        }
+
+        async function pilihSuratManual(nomor) {
+            if (nomor) {
+                stopAudio();
+                currentSuratNomor = parseInt(nomor);
+                document.getElementById('daftar-surat').value = nomor;
+                currentAyatIndex = (parseInt(nomor) !== 9) ? -1 : 0;
+                await muatSurat(nomor);
+            }
+        }
+
+        async function muatSurat(nomor) {
+            const container = document.getElementById('mushaf-content');
+            container.innerHTML = '<div class="text-center py-5 text-muted">Membuka lembaran mushaf...</div>';
+
+            try {
+                const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
+                const json = await res.json();
+
+                if (json.code === 200) {
+                    currentSuratData = json.data;
+                    currentSuratNomor = parseInt(nomor);
+
+                    let html = `
+                        <div class="surat-title-box">
+                            <h2>${currentSuratData.nama}</h2>
+                            <p class="text-muted small mb-0">${currentSuratData.namaLatin} (${currentSuratData.arti}) • ${currentSuratData.tempatTurun} • ${currentSuratData.jumlahAyat} Ayat</p>
+                        </div>
+                    `;
+
+                    if (currentSuratNomor !== 9) {
+                        html += `
+                            <div class="basmalah-box" id="basmalah-box">
+                                <div class="basmalah-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                            </div>
+                        `;
+                    }
+
+                    currentSuratData.ayat.forEach((a, idx) => {
+                        html += `
+                            <div class="ayat-row-card" id="row-card-${idx}">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-success">Ayat ${a.nomorAyat}</span>
+                                    <button class="btn btn-outline-success btn-sm rounded-pill px-3 py-0" style="font-size: 0.75rem;" onclick="playSingleAyat(${idx})">▶ Putar</button>
+                                </div>
+                                <div class="arabic-text-line">${a.teksArab}</div>
+                                <div class="translation-text-line"><strong>Artinya:</strong> ${a.teksIndonesia}</div>
+                            </div>
+                        `;
+                    });
+
+                    container.innerHTML = html;
+                    document.getElementById('daftar-surat').value = nomor;
+                }
+            } catch (e) {
+                container.innerHTML = '<div class="text-center py-5 text-danger">Gagal memuat surat. Periksa koneksi Anda.</div>';
+            }
+        }
+
+        function togglePlayAll() {
+            if (!currentSuratData) return;
+            if (isPlayingAll) {
+                stopAudio();
+            } else {
+                isPlayingAll = true;
+                document.getElementById('btnPlayAll').textContent = '⏹ Jeda Auto-Play';
+                playAyatSequence(currentAyatIndex);
+            }
+        }
+
+        function playSingleAyat(index) {
+            isPlayingAll = true;
+            document.getElementById('btnPlayAll').textContent = '⏹ Jeda Auto-Play';
+            currentAyatIndex = index;
+            playAyatSequence(index);
+        }
+
+        async function playAyatSequence(index) {
+            if (!isPlayingAll || !currentSuratData) return;
+
+            if (index >= currentSuratData.ayat.length) {
+                if (currentSuratNomor === 1 && !isPlayingAamiin) {
+                    isPlayingAamiin = true;
+                    document.getElementById('audio-status').textContent = `Melafalkan: Aamiin...`;
+                    
+                    highlightAamiinEffect(true);
+                    setTimeout(async () => {
+                        isPlayingAamiin = false;
+                        highlightAamiinEffect(false);
+                        pindahKeSuratBerikutnya();
+                    }, 2500);
+                    return;
+                }
+
+                pindahKeSuratBerikutnya();
+                return;
+            }
+
+            currentAyatIndex = index;
+            highlightActiveRow(index);
+
+            let audioUrl = "";
+            let statusText = "";
+
+            if (index === -1) {
+                audioUrl = `https://everyayah.com/data/Alafasy_128kbps/001001.mp3`;
+                statusText = `Memutar: Basmalah (${currentSuratData.namaLatin})`;
+            } else {
+                const ayat = currentSuratData.ayat[index];
+                let sNum = String(currentSuratNomor).padStart(3, '0');
+                let aNum = String(ayat.nomorAyat).padStart(3, '0');
+                audioUrl = `https://everyayah.com/data/Alafasy_128kbps/${sNum}${aNum}.mp3`;
+                statusText = `Memutar: ${currentSuratData.namaLatin} - Ayat ${ayat.nomorAyat}`;
+            }
+
+            document.getElementById('audio-status').textContent = statusText;
+            currentAudio.src = audioUrl;
+            currentAudio.load();
+            
+            try {
+                await currentAudio.play();
+            } catch (err) {
+                console.error("Audio play error:", err);
+            }
+
+            currentAudio.onended = function() {
+                if (isPlayingAll) {
+                    if (index === -1) {
+                        playAyatSequence(0);
+                    } else {
+                        playAyatSequence(index + 1);
+                    }
+                }
+            };
+        }
+
+        async function pindahKeSuratBerikutnya() {
+            let nextSurat = currentSuratNomor + 1;
+            if (nextSurat <= 114) {
+                document.getElementById('audio-status').textContent = `Berpindah ke Surat berikutnya...`;
+                currentAyatIndex = (nextSurat !== 9) ? -1 : 0;
+                await muatSurat(nextSurat);
+
+                if (isPlayingAll) {
+                    playAyatSequence(currentAyatIndex);
+                }
+            } else {
+                stopAudio();
+                document.getElementById('audio-status').textContent = 'Tamat (Surat 114 Selesai)';
+            }
+        }
+
+        function highlightActiveRow(index) {
+            document.querySelectorAll('.ayat-row-card').forEach(el => el.classList.remove('active-playing'));
+            let basmalahBox = document.getElementById('basmalah-box');
+            if (basmalahBox) basmalahBox.classList.remove('active-playing');
+
+            if (index === -1) {
+                if (basmalahBox) {
+                    basmalahBox.classList.add('active-playing');
+                    basmalahBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                const activeCard = document.getElementById(`row-card-${index}`);
+                if (activeCard) {
+                    activeCard.classList.add('active-playing');
+                    activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        }
+
+        function highlightAamiinEffect(show) {
+            const container = document.getElementById('mushaf-content');
+            if (show) {
+                let aamiinDiv = document.createElement('div');
+                aamiinDiv.id = 'aamiin-box';
+                aamiinDiv.className = 'text-center py-5';
+                aamiinDiv.innerHTML = `<h1 class="display-3 fw-bold text-success animate-pulse">آمِينْ</h1><p class="text-muted">Aamiin... (Mengabulkan Doa Al-Fatihah)</p>`;
+                container.prepend(aamiinDiv);
+                aamiinDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else {
+                let el = document.getElementById('aamiin-box');
+                if (el) el.remove();
+            }
+        }
+
+        function stopAudio() {
+            currentAudio.pause();
+            isPlayingAll = false;
+            isPlayingAamiin = false;
+            currentAyatIndex = -1;
+            document.querySelectorAll('.ayat-row-card').forEach(el => el.classList.remove('active-playing'));
+            let basmalahBox = document.getElementById('basmalah-box');
+            if (basmalahBox) basmalahBox.classList.remove('active-playing');
+            document.getElementById('btnPlayAll').textContent = '▶ Putar Otomatis (Continuous)';
+            document.getElementById('audio-status').textContent = 'Status: Siap Memutar';
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
