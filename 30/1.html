@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al-Qur'an Digital - Auto-Play Antar Surat & Per Baris</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0b462f;
+            --secondary-color: #148f5a;
+            --bg-mushaf: #fcf9f2;
+            --border-mushaf: #d3c5b4;
+            --text-arabic: #1a1a1a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #eef2ef;
+            color: #333;
+            line-height: 1.8;
+            padding-bottom: 90px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 1.2rem 1rem;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.1rem;
+        }
+
+        header p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .top-controls {
+            max-width: 900px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            background: #fff;
+            outline: none;
+        }
+
+        .mushaf-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .mushaf-page {
+            background-color: var(--bg-mushaf);
+            border: 2px solid var(--border-mushaf);
+            border-radius: 8px;
+            padding: 2rem 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .surat-title-box {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px double var(--border-mushaf);
+        }
+
+        .surat-title-box h2 {
+            font-family: 'Amiri', serif;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+        }
+
+        .surat-title-box p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Format Per Baris */
+        .ayat-row-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(211, 197, 180, 0.5);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .ayat-row-card.active-playing {
+            background-color: #f0f9f4;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 10px rgba(20, 143, 90, 0.2);
+        }
+
+        .ayat-row-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .ayat-badge {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .btn-play-single {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .arabic-text-line {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 2.2rem;
+            text-align: right;
+            color: var(--text-arabic);
+            line-height: 2.5;
+            direction: rtl;
+            margin-bottom: 0.8rem;
+        }
+
+        .translation-text-line {
+            font-size: 0.9rem;
+            color: #444;
+            border-top: 1px dashed #e0d5c1;
+            padding-top: 0.6rem;
+        }
+
+        /* Floating Menu Juz */
+        .floating-juz-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 85px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            z-index: 1000;
+        }
+
+        .juz-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: flex-end;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .juz-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .juz-drawer {
+            width: 320px;
+            max-width: 85%;
+            height: 100%;
+            background: white;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .juz-modal.active .juz-drawer {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .drawer-body {
+            padding: 1rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .juz-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .juz-item {
+            background: #f4f7f6;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        .juz-item:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Audio Bar Bawah */
+        .audio-bar {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 900;
+        }
+
+        .audio-bar button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            .arabic-text-line {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Al-Qur'an Mushaf Digital</h1>
+        <p>Auto-Play Antar Surat & Tampilan Per Baris</p>
+    </header>
+
+    <div class="top-controls">
+        <select id="daftar-surat" onchange="pilihSurat(this.value)">
+            <option value="">-- Memuat Daftar Surat --</option>
+        </select>
+    </div>
+
+    <div class="mushaf-wrapper">
+        <div class="mushaf-page" id="mushaf-content">
+            <div class="loading">Memuat halaman...</div>
+        </div>
+    </div>
+
+    <button class="floating-juz-btn" onclick="toggleJuzModal()">
+        <span style="font-size: 1rem;">📖</span>
+        JUZ
+    </button>
+
+    <div class="juz-modal" id="juzModal" onclick="checkCloseModal(event)">
+        <div class="juz-drawer">
+            <div class="drawer-header">
+                <h3>Pilih Juz (1 - 30)</h3>
+                <button class="btn-close" onclick="toggleJuzModal()">&times;</button>
+            </div>
+            <div class="drawer-body">
+                <div class="juz-grid" id="juzGridContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="audio-bar">
+        <span id="audio-status" style="font-size: 0.8rem; font-weight: 600; color: var(--primary-color);">Status: Siap Memutar</span>
+        <button id="btnPlayAll" onclick="togglePlayAll()">▶ Putar Otomatis (Continous)</button>
+    </div>
+
+    <audio id="audio-player" style="display: none;"></audio>
+
+    <script>
+        let currentAudio = document.getElementById('audio-player');
+        let currentSuratNomor = 1;
+        let currentSuratData = null;
+        let currentAyatIndex = 0;
+        let isPlayingAll = false;
+        let daftarSemuaSurat = [];
+
+        const juzMapping = [
+            { juz: 1, surat: 1 }, { juz: 2, surat: 2 }, { juz: 3, surat: 2 },
+            { juz: 4, surat: 3 }, { juz: 5, surat: 4 }, { juz: 6, surat: 4 },
+            { juz: 7, surat: 5 }, { juz: 8, surat: 6 }, { juz: 9, surat: 7 },
+            { juz: 10, surat: 8 }, { juz: 11, surat: 9 }, { juz: 12, surat: 11 },
+            { juz: 13, surat: 12 }, { juz: 14, surat: 15 }, { juz: 15, surat: 17 },
+            { juz: 16, surat: 18 }, { juz: 17, surat: 21 }, { juz: 18, surat: 23 },
+            { juz: 19, surat: 25 }, { juz: 20, surat: 27 }, { juz: 21, surat: 29 },
+            { juz: 22, surat: 33 }, { juz: 23, surat: 36 }, { juz: 24, surat: 39 },
+            { juz: 25, surat: 41 }, { juz: 26, surat: 46 }, { juz: 27, surat: 51 },
+            { juz: 28, surat: 58 }, { juz: 29, surat: 67 }, { juz: 30, surat: 78 }
+        ];
+
+        async function initApp() {
+            await loadDaftarSurat();
+            renderJuzGrid();
+            muatSurat(1);
+        }
+
+        async function loadDaftarSurat() {
+            try {
+                const res = await fetch('https://equran.id/api/v2/surat');
+                const json = await res.json();
+                if (json.code === 200) {
+                    daftarSemuaSurat = json.data;
+                    const select = document.getElementById('daftar-surat');
+                    select.innerHTML = '<option value="">-- Pilih Surat (1 - 114) --</option>';
+                    daftarSemuaSurat.forEach(s => {
+                        let opt = document.createElement('option');
+                        opt.value = s.nomor;
+                        opt.textContent = `${s.nomor}. ${s.namaLatin} (${s.arti}) - ${s.jumlahAyat} Ayat`;
+                        select.appendChild(opt);
+                    });
+                }
+            } catch (e) {
+                console.error("Gagal memuat daftar surat", e);
+            }
+        }
+
+        function renderJuzGrid() {
+            const container = document.getElementById('juzGridContainer');
+            container.innerHTML = '';
+            juzMapping.forEach(item => {
+                let div = document.createElement('div');
+                div.className = 'juz-item';
+                div.textContent = `Juz ${item.juz}`;
+                div.onclick = () => {
+                    pilihSurat(item.surat);
+                    toggleJuzModal();
+                };
+                container.appendChild(div);
+            });
+        }
+
+        function toggleJuzModal() {
+            document.getElementById('juzModal').classList.toggle('active');
+        }
+
+        function checkCloseModal(e) {
+            if (e.target.id === 'juzModal') toggleJuzModal();
+        }
+
+        function pilihSurat(nomor) {
+            if (nomor) {
+                currentSuratNomor = parseInt(nomor);
+                document.getElementById('daftar-surat').value = nomor;
+                muatSurat(nomor);
+            }
+        }
+
+        async function muatSurat(nomor) {
+            stopAudio();
+            currentSuratNomor = parseInt(nomor);
+            const container = document.getElementById('mushaf-content');
+            container.innerHTML = '<div class="loading">Membuka lembaran mushaf...</div>';
+
+            try {
+                const res = await fetch(`https://equran.id/api/v2/surat/${nomor}`);
+                const json = await res.json();
+
+                if (json.code === 200) {
+                    currentSuratData = json.data;
+                    currentAyatIndex = 0;
+
+                    let html = `
+                        <div class="surat-title-box">
+                            <h2>${currentSuratData.nama}</h2>
+                            <p>${currentSuratData.namaLatin} (${currentSuratData.arti}) • ${currentSuratData.tempatTurun} • ${currentSuratData.jumlahAyat} Ayat</p>
+                        </div>
+                    `;
+
+                    // Tampilkan per baris untuk setiap ayat
+                    currentSuratData.ayat.forEach((a, idx) => {
+                        html += `
+                            <div class="ayat-row-card" id="row-card-${idx}">
+                                <div class="ayat-row-top">
+                                    <span class="ayat-badge">Ayat ${a.nomorAyat}</span>
+                                    <button class="btn-play-single" onclick="playSingleAyat(${idx})">▶ Putar Ayat Ini</button>
+                                </div>
+                                <div class="arabic-text-line">${a.teksArab}</div>
+                                <div class="translation-text-line"><strong>Artinya:</strong> ${a.teksIndonesia}</div>
+                            </div>
+                        `;
+                    });
+
+                    container.innerHTML = html;
+                }
+            } catch (e) {
+                container.innerHTML = '<div class="loading" style="color:red;">Gagal memuat surat. Periksa koneksi Anda.</div>';
+            }
+        }
+
+        function togglePlayAll() {
+            if (!currentSuratData) return;
+            if (isPlayingAll) {
+                stopAudio();
+            } else {
+                isPlayingAll = true;
+                document.getElementById('btnPlayAll').textContent = '⏹ Jeda Auto-Play';
+                playAyatSequence(currentAyatIndex);
+            }
+        }
+
+        function playSingleAyat(index) {
+            isPlayingAll = true;
+            document.getElementById('btnPlayAll').textContent = '⏹ Jeda Auto-Play';
+            playAyatSequence(index);
+        }
+
+        function playAyatSequence(index) {
+            if (!isPlayingAll || !currentSuratData) return;
+
+            // Jika sudah habis di surat ini, otomatis lanjut ke surat berikutnya (114 surat maksimal)
+            if (index >= currentSuratData.ayat.length) {
+                let nextSurat = currentSuratNomor + 1;
+                if (nextSurat <= 114) {
+                    document.getElementById('audio-status').textContent = `Pindah otomatis ke Surat ${nextSurat}...`;
+                    pilihSurat(nextSurat);
+                    setTimeout(() => {
+                        if (isPlayingAll) playAyatSequence(0);
+                    }, 1000);
+                } else {
+                    stopAudio();
+                    document.getElementById('audio-status').textContent = 'Tamat (Surat 114 Selesai)';
+                }
+                return;
+            }
+
+            currentAyatIndex = index;
+            highlightActiveRow(index);
+
+            const ayat = currentSuratData.ayat[index];
+            let sNum = String(currentSuratNomor).padStart(3, '0');
+            let aNum = String(ayat.nomorAyat).padStart(3, '0');
+            let audioUrl = `https://everyayah.com/data/Alafasy_128kbps/${sNum}${aNum}.mp3`;
+
+            document.getElementById('audio-status').textContent = `Memutar: ${currentSuratData.namaLatin} - Ayat ${ayat.nomorAyat}`;
+            currentAudio.src = audioUrl;
+            currentAudio.load();
+            currentAudio.play().catch(err => console.error("Audio error", err));
+
+            currentAudio.onended = function() {
+                playAyatSequence(index + 1);
+            };
+        }
+
+        function highlightActiveRow(index) {
+            // Hapus highlight sebelumnya
+            document.querySelectorAll('.ayat-row-card').forEach(el => el.classList.remove('active-playing'));
+            
+            // Beri highlight baris yang sedang aktif
+            const activeCard = document.getElementById(`row-card-${index}`);
+            if (activeCard) {
+                activeCard.classList.add('active-playing');
+                activeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function stopAudio() {
+            currentAudio.pause();
+            isPlayingAll = false;
+            currentAyatIndex = 0;
+            document.querySelectorAll('.ayat-row-card').forEach(el => el.classList.remove('active-playing'));
+            document.getElementById('btnPlayAll').textContent = '▶ Putar Otomatis (Continous)';
+            document.getElementById('audio-status').textContent = 'Status: Siap Memutar';
+        }
+
+        initApp();
+    </script>
+</body>
+</html>
