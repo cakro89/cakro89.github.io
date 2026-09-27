@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al-Qur'an Digital 30 Juz - Auto Play Beruntun</title>
+    <title>Al-Qur'an Digital 30 Juz - Auto Play</title>
+    <!-- Google Fonts untuk Teks Arab dan Latin -->
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -158,28 +159,32 @@
 
     <header>
         <h1>Al-Qur'an Digital 30 Juz</h1>
-        <p>Dilengkapi Auto-Play Beruntun Antar Ayat</p>
+        <p>Lengkap dengan Audio Per Ayat & Auto-Play Beruntun</p>
     </header>
 
     <div class="container">
+        <!-- Kotak Pilihan Surat (1 sampai 114) -->
         <div class="nav-section">
             <select id="daftar-surat" onchange="gantiSurat(this.value)">
                 <option value="">Memuat Daftar Surat...</option>
             </select>
         </div>
 
+        <!-- Wadah Daftar Ayat -->
         <div id="quran-container">
             <div class="loading">Silakan pilih surat di atas untuk membaca Al-Qur'an.</div>
         </div>
     </div>
 
+    <!-- Elemen Audio Utama -->
     <audio id="audio-player" style="display: none;"></audio>
 
     <script>
         let currentAudio = document.getElementById('audio-player');
         let activeIndex = null;
-        let daftarAyatData = []; // Menyimpan data ayat aktif saat ini
+        let daftarAyatData = [];
 
+        // 1. Memuat daftar seluruh surat ke dalam dropdown
         async function loadDaftarSurat() {
             try {
                 const response = await fetch('https://equran.id/api/v2/surat');
@@ -196,6 +201,7 @@
                         select.appendChild(opt);
                     });
 
+                    // Set default ke Surat Al-Fatihah (Nomor 1)
                     select.value = "1";
                     muatAyatSurat(1);
                 }
@@ -204,12 +210,14 @@
             }
         }
 
+        // 2. Fungsi saat pilihan surat diubah
         function gantiSurat(nomorSurat) {
             if (nomorSurat) {
                 muatAyatSurat(nomorSurat);
             }
         }
 
+        // 3. Mengambil dan merender isi ayat dari surat yang dipilih
         async function muatAyatSurat(nomor) {
             const container = document.getElementById('quran-container');
             container.innerHTML = '<div class="loading">Memuat ayat...</div>';
@@ -223,9 +231,10 @@
 
                 if (result.code === 200) {
                     const data = result.data;
-                    daftarAyatData = data.ayat; // Simpan array ayat untuk navigasi auto-play
+                    daftarAyatData = data.ayat;
                     container.innerHTML = '';
 
+                    // Kartu Informasi Surat di Bagian Atas
                     const infoCard = document.createElement('div');
                     infoCard.style.cssText = "background: var(--primary-color); color: white; padding: 1.2rem; border-radius: 12px; margin-bottom: 1rem; text-align: center;";
                     infoCard.innerHTML = `
@@ -235,6 +244,7 @@
                     `;
                     container.appendChild(infoCard);
 
+                    // Looping kartu ayat
                     data.ayat.forEach((ayat, index) => {
                         const card = document.createElement('div');
                         card.className = 'ayat-card';
@@ -262,8 +272,8 @@
             }
         }
 
+        // 4. Sistem Pemutaran Audio dengan Auto-Play & Auto-Scroll
         function playAudioByIndex(index) {
-            // Jika diklik pada ayat yang sedang diputar, lakukan pause
             if (!currentAudio.paused && activeIndex === index) {
                 currentAudio.pause();
                 resetActiveCard();
@@ -277,30 +287,37 @@
             if (!ayat) return;
 
             const audioUrl = ayat.audio['01'];
+            
+            // Pengaturan buffer audio agar stabil di HP
+            currentAudio.pause();
             currentAudio.src = audioUrl;
+            currentAudio.load();
 
-            // Beri tanda visual pada kartu yang sedang aktif
             const currentCard = document.getElementById(`card-${index}`);
             const currentBtn = document.getElementById(`btn-${index}`);
+            
             if (currentCard && currentBtn) {
                 currentCard.classList.add('playing');
                 currentBtn.innerHTML = '⏸ Jeda';
-                // Otomatis gulir (scroll) layar ke ayat yang sedang diputar agar posisinya pas
+                // Otomatis menggulir layar ke ayat yang sedang dibaca
                 currentCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
             currentAudio.play().catch(err => console.error("Gagal memutar audio:", err));
 
-            // EVENT: Ketika audio ayat ini selesai, otomatis lanjut ke indeks berikutnya
+            // Ketika satu ayat selesai, otomatis lanjut ke ayat berikutnya
             currentAudio.onended = function() {
                 resetActiveCard();
                 let nextIndex = index + 1;
                 if (nextIndex < daftarAyatData.length) {
-                    playAudioByIndex(nextIndex); // Panggil rekursif ke ayat berikutnya
+                    setTimeout(() => {
+                        playAudioByIndex(nextIndex);
+                    }, 300); // Jeda aman perpindahan antar ayat
                 }
             };
         }
 
+        // Reset status tampilan kartu saat audio berhenti/pindah
         function resetActiveCard() {
             if (activeIndex !== null) {
                 const prevCard = document.getElementById(`card-${activeIndex}`);
@@ -311,6 +328,7 @@
             }
         }
 
+        // Jalankan fungsi utama saat halaman pertama dibuka
         loadDaftarSurat();
     </script>
 </body>
