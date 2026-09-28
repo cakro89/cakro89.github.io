@@ -2,14 +2,14 @@
         :root {
             --primary-color: #0b462f;
             --secondary-color: #148f5a;
-            --bg-mushaf: #fcf9f2;
+            --bg-mushaf: #ffffff;
             --border-mushaf: #d3c5b4;
             --text-arabic: #1a1a1a;
         }
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #eef2ef;
+            background-color: #ffffff;
             color: #333;
             padding-top: 140px;
             padding-bottom: 100px;
@@ -78,7 +78,7 @@
 
         /* Format Per Baris Ayat */
         .ayat-row-card {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgb(255 255 255 / 70%);
             border: 1px solid rgba(211, 197, 180, 0.6);
             border-radius: 10px;
             padding: 1.2rem;
@@ -87,7 +87,7 @@
         }
 
         .ayat-row-card.active-playing {
-            background-color: #f0f9f4 !important;
+            background-color: #00ff71 !important;
             border-color: var(--secondary-color) !important;
             box-shadow: 0 0 12px rgba(20, 143, 90, 0.25);
         }
